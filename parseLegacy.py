@@ -512,7 +512,7 @@ for row in rows2:
     params = (row[0], row[1], row[2], row[3])
     db(query, params)
 
-# populate attrib1 and attrib2 w/ 44 attribs, all int
+# populate item_attribs w/ 44 attribs, all integer
 cols = ('vararmor', 'varhp', 'inthit', 'intdam', \
 'varspell', 'varbreath', 'varpara', 'varpetri', 'varrod', \
 'varstr', 'varagi', 'vardex', 'varcon', \
@@ -540,27 +540,16 @@ attribs = ('armor', 'hp', 'hit', 'dam', \
 for x in xrange(0, len(cols)):
     col = cols[x]
     att = attribs[x]
-    query = "SELECT \
-    item_id, attrib1, attrib2, "+col+" \
+    query = "SELECT item_id, "+col+" \
     FROM items, legacy \
     WHERE varname = item_name \
     AND "+col+" IS NOT NULL"
     params = ''
     rows = db(query, params)
     for row in rows:
-        num = ''
-        if row[1] is None:
-            num = 'attrib1'
-        elif row[2] is None:
-            num = 'attrib2'
-        else:
-            print 'Item '+str(row[0])+' has more than 2 attribs'
-        if num != '':
-            query = "UPDATE items SET \
-            ("+num+", "+num+"_value) = \
-            (%s, %s) WHERE item_id = %s"
-            params = (att, row[3], row[0])
-            db(query, params)
+        query = "INSERT INTO item_attribs VALUES(%s, %s, %s)"
+        params = (row[0], att, row[1])
+        db(query, params)
 
 
 # populate item_resists

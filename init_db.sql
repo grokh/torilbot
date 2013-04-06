@@ -489,7 +489,7 @@ INSERT INTO zones VALUES('Keprum', E'Keprum Vhai\'Rhel');
 INSERT INTO zones VALUES('FK', 'Keep of Finn McCumhail');
 INSERT INTO zones VALUES('Jungles of Ssrynss', 'Jungles of Ssrynss');
 INSERT INTO zones VALUES('Hyssk', 'Jungle City of Hyssk');
-INSERT INTO zones VALUES(E'Izan's', E'Izan\'s Floating Fortress');
+INSERT INTO zones VALUES(E'Izan\'s', E'Izan\'s Floating Fortress');
 INSERT INTO zones VALUES('IxP', 'Ixarkon Prison');
 INSERT INTO zones VALUES('Ix', 'Ixarkon');
 INSERT INTO zones VALUES('Ice Prison', 'Ice Prison');
@@ -657,10 +657,6 @@ CREATE TABLE items(
 	,weight integer
 	,c_value integer
 	,item_type varchar(10) REFERENCES item_types(type_abbr)
-	,attrib1 varchar(25) REFERENCES attribs(attrib_abbr)
-	,attrib1_value integer
-	,attrib2 varchar(25) REFERENCES attribs(attrib_abbr)
-	,attrib2_value integer
 	,from_zone varchar(25) REFERENCES zones(zone_abbr)
 	,from_mob varchar(150) REFERENCES mobs(mob_name)
 	,no_identify boolean
