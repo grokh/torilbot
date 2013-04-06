@@ -254,41 +254,44 @@ def short_stats():
     params = ''
     ids = db(query, params)
     for id in ids:
-        query = "SELECT item_name, initcap(attrib1), attrib1_value, \
-        initcap(attrib2), attrib2_value, initcap(item_type), weight, c_value, \
+        query = "SELECT item_name, \
+        INITCAP(item_type), weight, c_value, \
         from_zone, last_id, is_rare, from_store, from_quest, for_quest, \
         from_invasion, out_of_game, no_identify \
         FROM items WHERE item_id = %s"
         params = (id[0],)
         item = db(query, params)
         i = item[0][0]
-        query = "SELECT initcap(slot_abbr) FROM item_slots WHERE item_id = %s"
+        query = "SELECT INITCAP(slot_abbr) FROM item_slots WHERE item_id = %s"
         slots = db(query, params)
         if len(slots) > 0: # if item has worn slots
             for slot in slots:
                 i += ' ('+slot[0]+')'
-        query = "SELECT upper(spec_abbr), spec_value FROM item_specials \
+        query = "SELECT UPPER(spec_abbr), spec_value FROM item_specials \
         WHERE item_id = %s AND item_type = 'armor'"
         specs = db(query, params)
         if len(specs) > 0: # if item has AC because it's type Armor
             for spec in specs:
                 i += ' '+spec[0]+':'+str(spec[1])
-        if item[0][1] != None:
-            i += ' '+item[0][1]+':'+str(item[0][2])
-        if item[0][3] != None:
-            i += ' '+item[0][3]+':'+str(item[0][4])
-        query = "SELECT initcap(resist_abbr), resist_value \
+        # put in attribs
+        query = "SELECT INITCAP(attrib_abbr), attrib_value \
+                FROM item_attribs WHERE item_id = %s"
+        attrs = db(query, params)
+        if len(attrs) > 0:
+            for att in attrs:
+                i += ' '+att[0]+':'+str(att[1])
+        query = "SELECT INITCAP(resist_abbr), resist_value \
         FROM item_resists WHERE item_id = %s"
         resi = db(query, params)
         if len(resi) > 0: # if item has resistances
             for res in resi:
                 i += ' '+res[0]+':'+str(res[1])+'%'
-        query = "SELECT item_type, initcap(spec_abbr), initcap(spec_value) \
+        query = "SELECT item_type, INITCAP(spec_abbr), INITCAP(spec_value) \
         FROM item_specials \
         WHERE item_id = %s AND item_type != 'armor'"
         specs = db(query, params)
         if len(specs) > 0: # if item has specials, like weapon or instrument
-            special = ' * ('+item[0][5]+')'
+            special = ' * ('+item[0][1]+')'
             if specs[0][0] == 'crystal' or specs[0][0] == 'spellbook' or \
             specs[0][0] == 'comp_bag' or specs[0][0] == 'ammo':
                 for spec in specs:
@@ -356,7 +359,7 @@ def short_stats():
                         type = ' '+spec[1]+':'+spec[2]+')'
                 special += dice+crit+multi+clas+type
             i += special
-        query = "SELECT initcap(effect_abbr) FROM item_effects WHERE item_id = %s"
+        query = "SELECT INITCAP(effect_abbr) FROM item_effects WHERE item_id = %s"
         effects = db(query, params)
         if len(effects) > 0: # if item has effects like infra
             i += ' *'
@@ -372,7 +375,7 @@ def short_stats():
                 else:
                     process += ' - '+proc[0]
             i += process
-        query = "SELECT initcap(ench_name), dam_pct, freq_pct, sv_mod, duration \
+        query = "SELECT INITCAP(ench_name), dam_pct, freq_pct, sv_mod, duration \
         FROM item_enchants WHERE item_id = %s"
         enchs = db(query, params)
         if len(enchs) > 0: # if item has weapon enchantment
@@ -385,45 +388,45 @@ def short_stats():
                 enchant += ench[0]+' '+str(ench[1])+'% '+str(ench[2])\
                 +'% '+str(ench[3])+' '+str(ench[4])
             i += enchant
-        query = "SELECT initcap(flag_abbr) FROM item_flags WHERE item_id = %s"
+        query = "SELECT INITCAP(flag_abbr) FROM item_flags WHERE item_id = %s"
         flags = db(query, params)
         if len(flags) > 0: # if item has flags like magic
             i += ' *'
             for flag in flags:
                 i += ' '+flag[0]
-        query = "SELECT initcap(restrict_abbr) FROM item_restricts WHERE item_id = %s"
+        query = "SELECT INITCAP(restrict_abbr) FROM item_restricts WHERE item_id = %s"
         restr = db(query, params)
         if len(restr) > 0: # if item has restrictions
             i += ' *'
             for res in restr:
                 i += ' '+res[0]
         type = ' *'
-        if item[0][16]:
+        if item[0][12]:
             type += ' NoID'
-        if item[0][6] != None:
-            type += ' Wt:'+str(item[0][6])
-        if item[0][7] != None:
-            type += ' Val:'+str(item[0][7])
-        #type += ' Type:'+item[0][5]
+        if item[0][2] != None:
+            type += ' Wt:'+str(item[0][2])
+        if item[0][3] != None:
+            type += ' Val:'+str(item[0][3])
+        #type += ' Type:'+item[0][1]
         i += type
         # add is_rare, from_quest, etc. to zone info
         zext = ''
-        if item[0][10]:
+        if item[0][6]:
             zext += 'R'
-        if item[0][11]:
+        if item[0][7]:
             zext += 'S'
-        if item[0][12]:
+        if item[0][8]:
             zext += 'Q'
-        if item[0][13]:
+        if item[0][9]:
             zext += 'U'
-        if item[0][14]:
+        if item[0][10]:
             zext += 'I'
-        if item[0][15]:
+        if item[0][11]:
             zext += 'O'
-        zone = item[0][8]
+        zone = item[0][4]
         if zext != '':
             zone += ' ('+zext+')'
-        i += ' * Zone: '+zone+' * Last ID: '+str(item[0][9])
+        i += ' * Zone: '+zone+' * Last ID: '+str(item[0][5])
         #print 'Item '+str(id[0])+': '+i
         query = "UPDATE items SET short_stats = %s WHERE item_id = %s"
         params = (i, id[0])
@@ -434,8 +437,8 @@ def long_stats():
     params = ''
     ids = db(query, params)
     for id in ids:
-        query = "SELECT item_name, attrib1, attrib1_value, attrib2, \
-        attrib2_value, item_type, weight, c_value, zone_name, last_id, \
+        query = "SELECT item_name, \
+        item_type, weight, c_value, zone_name, last_id, \
         is_rare, from_store, from_quest, for_quest, from_invasion, \
         out_of_game, no_identify, keywords \
         FROM items i, zones z \
@@ -459,24 +462,17 @@ def long_stats():
         specs = db(query, params)
         if len(specs) > 0:
             i += ', '+specs[0][2]+': '+str(specs[0][1])
-        if item[0][1] != None:
-            query = "SELECT attrib_display FROM attribs \
-            WHERE attrib_abbr = %s"
-            params = (item[0][1],)
-            attrs = db(query, params)
-            if len(attrs) > 0:
-                i += ', '+attrs[0][0]+': '+str(item[0][2])
-        if item[0][3] != None:
-            query = "SELECT attrib_display FROM attribs \
-            WHERE attrib_abbr = %s"
-            params = (item[0][3],)
-            attrs = db(query, params)
-            if len(attrs) > 0:
-                i += ', '+attrs[0][0]+': '+str(item[0][4])
+        query = "SELECT i.attrib_abbr, attrib_value, attrib_display \
+                FROM item_attribs i, attribs a \
+                WHERE i.attrib_abbr = a.attrib_abbr AND item_id = %s"
+        attrs = db(query, params)
+        if len(attrs) > 0:
+            i += ' *'
+            for att in attrs:
+                i += ', '+att[2]+': '+str(att[1])
         query = "SELECT i.resist_abbr, resist_value, resist_display \
         FROM item_resists i, resists r \
         WHERE i.resist_abbr = r.resist_abbr AND item_id = %s"
-        params = (id[0],)
         resis = db(query, params)
         if len(resis) > 0:
             i += ' *'
@@ -528,38 +524,38 @@ def long_stats():
             i += ' *'
             for rest in rests:
                 i += ', '+rest[1]
-        if item[0][17]:
-            i += ' * Keywords:('+item[0][17]+')'
+        if item[0][13]:
+            i += ' * Keywords:('+item[0][13]+')'
         type = ' *'
-        if item[0][16]:
+        if item[0][12]:
             type += ', No-Identify'
-        if item[0][6] != None:
-            wt = locale.format("%d", item[0][6], grouping=True)
+        if item[0][2] != None:
+            wt = locale.format("%d", item[0][2], grouping=True)
             type += ', Weight: '+str(wt)+' lbs'
-        if item[0][7] != None:
-            val = locale.format("%d", item[0][7], grouping=True)
+        if item[0][3] != None:
+            val = locale.format("%d", item[0][3], grouping=True)
             type += ', Value: '+str(val)+' copper'
-        #type += ', Type: '+item[0][5]
+        #type += ', Type: '+item[0][1]
         i += type
         # add is_rare, from_quest, etc. to zone info
         zext = ''
-        if item[0][10]:
+        if item[0][6]:
             zext += ', Is Rare'
-        if item[0][11]:
+        if item[0][7]:
             zext += ', From Store'
-        if item[0][12]:
+        if item[0][8]:
             zext += ', From Quest'
-        if item[0][13]:
+        if item[0][9]:
             zext += ', Used In Quest'
-        if item[0][14]:
+        if item[0][10]:
             zext += ', From Invasion'
-        if item[0][15]:
+        if item[0][11]:
             zext += ', Out Of Game'
-        zone = item[0][8]
+        zone = item[0][4]
         if zext != '':
             zone += ' ('+zext+')'
             zone = zone.replace('(, ', '(')
-        i += ' * Zone: '+zone+' * Last ID: '+str(item[0][9])
+        i += ' * Zone: '+zone+' * Last ID: '+str(item[0][5])
         i = i.replace('*, ', '* ')
         i = i.replace('* *', '*')
         #print 'Item '+str(id[0])+': '+i
