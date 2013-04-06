@@ -88,6 +88,9 @@ def parse_identify():
             (dam_pct, freq_pct, dam_mod, duration) = 0, 0, 0, 0
             (attrib1, attrib2) = '', ''
             (atval1, atval2) = 0, 0
+            (pgs, lvl, apps, mchg, cchg) = 0, 0, 0, 0, 0
+            (qual, stut, mlvl) = 0, 0, 0
+            ptype = ''
             lines = item.splitlines()
             for line in lines:
                 line = line.strip()
@@ -95,6 +98,8 @@ def parse_identify():
                     name = line.replace("Name '",'')
                     name = name[:len(name)-1]
                 elif "Keyword '" in line: # keywords, type
+                    # bug: if keywords too long, can't split properly
+                    # can't figure out how to programatically put on same line
                     kt = line.split(',')
                     keys = kt[0].replace("Keyword '",'')
                     keys = keys.strip("' ")
@@ -106,8 +111,8 @@ def parse_identify():
                     slots = worn.split()
                 elif "Item will give you" in line: # effects
                     effs = line.replace("Item will give you following abilities:",'')
-                    effs = effs.split() # NOBITS is equivalent to empty
-                elif "Item is:" in line: # restricts/flags
+                    effs = effs.split() # NOBITS is equivalent to null
+                elif "Item is:" in line: # restricts/flags, NOBITSNOBITS null
                     rfs = line.replace("Item is:",'')
                     rfs = rfs.split()
                     for rf in rfs:
@@ -166,34 +171,15 @@ def parse_identify():
                     else:
                         attrib2 = attrs[0]
                         atval2 = int(attrs[1])
-                elif "Special Effects :" in line: # proc, can be multline sigh
-                    pass
-                elif "Special Bonus" in line: # can be plural or singular
-                    pass
-                elif "Combat Critical :" in line:
-                    pass
-                elif "spells of:" in line: # potion, scroll
-                    # Level 35 spells of: fly on its own line :/
-                    lvl = line.replace('Level','')
-                    lvl = lvl.replace('spells of:','')
-                    lvl = int(lvl.strip())
-                elif "spell of:" in line: # staff, wand, spell on its own line
-                    lvl = line.replace('Level','')
-                    lvl = lvl.replace('spell of:','')
-                    lvl = int(lvl.strip())
-                elif "charges, with" in line: # wand, staff
-                    # Has 5 charges, with 4 charges left.
-                    chgs = line.split(',')
-                    mchg = chgs[0].replace('charges','')
-                    mchg = mchg.replace('Has','')
-                    mchg = int(mchg.strip())
-                    cchg = chgs[1].replace('with','')
-                    cchg = cchg.replace('charges left.','')
-                    cchg = int(cchg.strip())
                 elif "Total Pages:" in line:
                     # Total Pages: 300
                     pgs = line.replace('Total Pages:','')
                     pgs = int(pgs.strip())
+                elif "capacity, charged" in line:
+                    # Has 700 capacity, charged with 700 points.
+                    psps = line.split('cap')
+                    psp = psps[0].replace('Has','')
+                    psp = int(psp.strip())
                 elif "Poison affects" in line:
                     # Poison affects as blindness at level 25.
                     poiss = line.split('at')
@@ -214,6 +200,32 @@ def parse_identify():
                     stut = int(stut.strip())
                     mlvl = ins[2].replace('Min Level:','')
                     mlvl = int(mlvl.strip())
+                elif "charges, with" in line: # wand, staff
+                    # Has 5 charges, with 4 charges left.
+                    chgs = line.split(',')
+                    mchg = chgs[0].replace('charges','')
+                    mchg = mchg.replace('Has','')
+                    mchg = int(mchg.strip())
+                    cchg = chgs[1].replace('with','')
+                    cchg = cchg.replace('charges left.','')
+                    cchg = int(cchg.strip())
+                elif "spells of:" in line: # potion/scroll
+                    # Level 35 spells of: fly on its own line :/
+                    lvl = line.replace('Level','')
+                    lvl = lvl.replace('spells of:','')
+                    lvl = int(lvl.strip())
+                    # input spells manually?
+                elif "spell of:" in line: # staff/wand, spell on its own line
+                    lvl = line.replace('Level','')
+                    lvl = lvl.replace('spell of:','')
+                    lvl = int(lvl.strip())
+                    # input spell manually?
+                elif "Special Effects :" in line: # proc, can be multline sigh
+                    pass # input manually?
+                elif "Special Bonus" in line: # can be plural or singular
+                    pass # manually?
+                elif "Combat Critical :" in line:
+                    pass # manually?
             # back to 'for item in items' iteration
             # check if exact name is already in DB
             query = "SELECT * FROM items WHERE item_name = %s"
@@ -233,6 +245,8 @@ def parse_identify():
             else:
                 pass
         # send all insert/update queries as a .sql file to review
+        # manual updates: resists, procs, spells for potion/scroll/staff/wand,
+        # container holds/wtless, zone, quest/used/rare/invasion/store
 
 # generate short_stats from new items tables
 def short_stats():
