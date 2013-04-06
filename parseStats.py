@@ -173,17 +173,47 @@ def parse_identify():
                 elif "Combat Critical :" in line:
                     pass
                 elif "spells of:" in line: # potion, scroll
-                    pass # Level 35 spells of: fly on its own line :/
-                elif "spell of:" in line: # staff, wand
-                    pass
+                    # Level 35 spells of: fly on its own line :/
+                    lvl = line.replace('Level','')
+                    lvl = lvl.replace('spells of:','')
+                    lvl = int(lvl.strip())
+                elif "spell of:" in line: # staff, wand, spell on its own line
+                    lvl = line.replace('Level','')
+                    lvl = lvl.replace('spell of:','')
+                    lvl = int(lvl.strip())
                 elif "charges, with" in line: # wand, staff
-                    pass # Has 5 charges, with 4 charges left.
+                    # Has 5 charges, with 4 charges left.
+                    chgs = line.split(',')
+                    mchg = chgs[0].replace('charges','')
+                    mchg = mchg.replace('Has','')
+                    mchg = int(mchg.strip())
+                    cchg = chgs[1].replace('with','')
+                    cchg = cchg.replace('charges left.','')
+                    cchg = int(cchg.strip())
                 elif "Total Pages:" in line:
-                    pass # Total Pages: 300
+                    # Total Pages: 300
+                    pgs = line.replace('Total Pages:','')
+                    pgs = int(pgs.strip())
                 elif "Poison affects" in line:
-                    pass # Poison affects as blindness at level 25.
+                    # Poison affects as blindness at level 25.
+                    poiss = line.split('at')
+                    lvl = poiss[1].replace('level','')
+                    lvl = int(lvl.strip('. '))
+                    ptype = poiss[0].replace('Poison affects as','')
+                    ptype = ptype.strip()
                 elif "Applications remaining" in line:
-                    pass # Applications remaining: 10
+                    # Applications remaining: 10
+                    apps = line.replace('Applications remaining:','')
+                    apps = line.strip()
+                elif "Stutter:" in line:
+                    # Quality: 15, Stutter: 0, Min Level: 40
+                    ins = line.split(',')
+                    qual = ins[0].replace('Quality:','')
+                    qual = int(qual.strip())
+                    stut = ins[1].replace('Stutter:','')
+                    stut = int(stut.strip())
+                    mlvl = ins[2].replace('Min Level:','')
+                    mlvl = int(mlvl.strip())
             # back to 'for item in items' iteration
             # check if exact name is already in DB
             query = "SELECT * FROM items WHERE item_name = %s"
@@ -195,7 +225,8 @@ def parse_identify():
                 # if it does match, update the date of last_id
                 if len(rows) > 0:
                     pass
-                # if it doesn't match, mark as potential update and compile update queries
+                # if it doesn't match, mark as potential update and compile
+                # update queries
                 else:
                     pass
             # if it's not in the DB, compile full insert queries
