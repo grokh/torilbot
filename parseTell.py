@@ -84,8 +84,11 @@ def reply(msg):
 
 def findcmd(rows):
     tdelta = datetime.now() - rows[0][2]
-    if tdelta.days > 0:
-        delta = str(tdelta.days)+' day(s)'
+    online = False
+    if tdelta.days == 1:
+        delta = str(tdelta.days)+' day'
+    elif tdelta.days > 1:
+        delta = str(tdelta.days)+' days'
     elif tdelta.seconds > 3600:
         hours, remainder = divmod(tdelta.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
@@ -94,8 +97,12 @@ def findcmd(rows):
         minutes, seconds = divmod(tdelta.seconds, 60)
         delta = '%sm%ss' % (minutes, seconds)
     else:
+        online = True
         delta = str(tdelta.seconds)+'s'
-    reply('@'+rows[0][0]+' last seen '+delta+' ago as '+rows[0][1])
+    if online:
+        reply('@'+rows[0][0]+' is online as '+rows[0][1])
+    else:
+        reply('@'+rows[0][0]+' last seen '+delta+' ago as '+rows[0][1])
 
 def clistcmd(rows):
     for row in rows:
