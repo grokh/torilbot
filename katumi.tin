@@ -44,7 +44,7 @@
 	#split {0} {0};
 }
 #tick {Timer} {time;who} {30}
-#act {^Time elapsed since boot-up: %1} {#system parseTime.py %1 &}
+#act {^Time elapsed since boot-up: %1} {#system ./parseTime.py %1 &}
 
 #event {PROGRAM START} {login}
 #event {SESSION DISCONNECTED} {login}
@@ -57,7 +57,7 @@
 
     #var {chat} {%2};
     #replace {chat} {"} {'};
-    #script {answer} {parseTell.py "%1" "$chat" &};
+    #script {answer} {./parseTell.py "%1" "$chat" &};
     #foreach {$answer} {cmd} {
         #if {"$cmd" != "%d"} {$cmd};
     };
@@ -70,13 +70,13 @@
 
 #nop Who Check Expects: Name Class Level Race Account
 #act {^[ %d %.%.%.] %w %*(%*)} {
-	#script {answer} {parseWho.py %5 %2%3%4 %1 "%7" &};
+	#script {answer} {./parseWho.py %5 %2%3%4 %1 "%7" &};
 	#foreach {$answer} {cmd} {
 		#if {"$cmd" != "%d"} {$cmd};
 	};
 }
 #act {^[%.%. %.%.%.] %w %*(%*)} {
-	#script {answer} {parseWho.py %6 %3%4%5 %1%2 "%8" &};
+	#script {answer} {./parseWho.py %6 %3%4%5 %1%2 "%8" &};
 	#foreach {$answer} {cmd} {
 		#if {"$cmd" != "%d"} {$cmd};
 	};
@@ -87,7 +87,7 @@
 #act {^[ %d %+] %w %*(%*) (@%*)} {
 	#var {race} {%5};
 	#replace {race} {)%*} {};
-	#script {answer} {parseWho.py %3 "%2" %1 "$race" %6 &};
+	#script {answer} {./parseWho.py %3 "%2" %1 "$race" %6 &};
 	#foreach {$answer} {cmd} {
 		#if {"$cmd" != "%d"} {$cmd};
 	};
@@ -95,7 +95,7 @@
 #act {^[%.%. %+] %w %*(%*) (@%*)} {
 	#var {race} {%6};
 	#replace {race} {)%*} {};
-	#script {answer} {parseWho.py %4 "%3" %1%2 "$race" %7 &};
+	#script {answer} {./parseWho.py %4 "%3" %1%2 "$race" %7 &};
 	#foreach {$answer} {cmd} {
 		#if {"$cmd" != "%d"} {$cmd};
 	};
