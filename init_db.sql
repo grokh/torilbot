@@ -132,8 +132,8 @@ CREATE TABLE attribs(
 INSERT INTO attribs VALUES('armor', 'ARMOR', 'Armor');
 INSERT INTO attribs VALUES('hit', 'HITROLL', 'Hitroll');
 INSERT INTO attribs VALUES('dam', 'DAMROLL', 'Damroll');
-INSERT INTO attribs VALUES('HP', 'HITPOINTS', 'Hitpoints');
-INSERT INTO attribs VALUES('MV', 'MOVE', 'Movement');
+INSERT INTO attribs VALUES('hp', 'HITPOINTS', 'Hitpoints');
+INSERT INTO attribs VALUES('mv', 'MOVE', 'Movement');
 INSERT INTO attribs VALUES('mana', 'MANA', 'Mana');
 INSERT INTO attribs VALUES('svsp', 'SV_SPELL', 'Save Spell');
 INSERT INTO attribs VALUES('svbr', 'SV_BREATH', 'Save Breath');
@@ -618,7 +618,7 @@ CREATE TABLE specials(
 	,spec_display varchar(25)
 	,PRIMARY KEY (item_type, spec_abbr)
 );
-INSERT INTO specials VALUES('armor', 'AC', 'Armor Class'); -- intac
+INSERT INTO specials VALUES('armor', 'ac', 'Armor Class'); -- intac
 INSERT INTO specials VALUES('crystal', 'psp', 'Crystal PSP'); -- varpsp
 INSERT INTO specials VALUES('spellbook', 'pages', 'Pages'); -- varpages
 INSERT INTO specials VALUES('container', 'holds', 'Capacity'); -- varholds
