@@ -1,10 +1,17 @@
 -- create new character tracking tables and populate with base data
-CREATE TABLE race_types(race_type varchar(20) PRIMARY KEY, anti_flag varchar(20));
+CREATE TABLE race_types(
+	race_type varchar(20) PRIMARY KEY
+	,anti_flag varchar(20)
+);
 INSERT INTO race_types VALUES('Good', 'ANTI-GOODRACE');
 INSERT INTO race_types VALUES('Evil', 'ANTI-EVILRACE');
 INSERT INTO race_types VALUES('Neutral', '');
-CREATE TABLE races(race_name varchar(20) PRIMARY KEY, race_abbr varchar(10),
-	anti_flag varchar(20), race_type varchar(20) REFERENCES race_types(race_type));
+CREATE TABLE races(
+	race_name varchar(20) PRIMARY KEY
+	,race_abbr varchar(10)
+	,anti_flag varchar(20)
+	,race_type varchar(20) REFERENCES race_types(race_type)
+);
 INSERT INTO races VALUES('Human', 'Human', 'ANTI-HUMAN', 'Good');
 INSERT INTO races VALUES('Barbarian', 'Barb', 'ANTI-BARBARIAN', 'Good');
 INSERT INTO races VALUES('Drow Elf', 'Drow', 'ANTI-DROWELF', 'Evil');
@@ -20,13 +27,20 @@ INSERT INTO races VALUES('Troll', 'Troll', 'ANTI-TROLL', 'Evil');
 INSERT INTO races VALUES('Illithid', 'Squid', 'ANTI-ILLITHID', 'Evil');
 INSERT INTO races VALUES('Orc', 'Orc', 'ANTI-ORC', 'Evil');
 INSERT INTO races VALUES('Yuan-Ti', 'Yuan', 'ANTI-YUANTI', 'Evil');
-CREATE TABLE class_types(class_type varchar(10) PRIMARY KEY, anti_flag varchar(20));
+CREATE TABLE class_types(
+	class_type varchar(10) PRIMARY KEY
+	,anti_flag varchar(20)
+);
 INSERT INTO class_types VALUES('Fighter', 'NO-WARRIOR');
 INSERT INTO class_types VALUES('Priest', 'NO-CLERIC');
 INSERT INTO class_types VALUES('Rogue', 'NO-THIEF');
 INSERT INTO class_types VALUES('Mage', 'NO-MAGE');
-CREATE TABLE classes(class_name varchar(30) PRIMARY KEY, class_abbr varchar(3),
-	class_type varchar(10) REFERENCES class_types(class_type), anti_flag varchar(20));
+CREATE TABLE classes(
+	class_name varchar(30) PRIMARY KEY
+	,class_abbr varchar(3)
+	,class_type varchar(10) REFERENCES class_types(class_type)
+	,anti_flag varchar(20)
+);
 CREATE INDEX idx_lowclass_name ON classes (LOWER(class_name));
 INSERT INTO classes VALUES('Warrior', 'War', 'Fighter', 'ANTI-WARRIOR');
 INSERT INTO classes VALUES('Ranger', 'Ran', 'Fighter', 'ANTI-RANGER');
@@ -46,25 +60,45 @@ INSERT INTO classes VALUES('Necromancer', 'Nec', 'Mage', 'ANTI-NECROMANCER');
 INSERT INTO classes VALUES('Illusionist', 'Ill', 'Mage', 'ANTI-ILLUSIONIST');
 INSERT INTO classes VALUES('Psionicist', 'Psi', 'Mage', 'ANTI-PSIONICIST');
 INSERT INTO classes VALUES('Lich', 'Lic', 'Mage', 'ANTI-LICH');
-CREATE TABLE accounts(account_name varchar(30) PRIMARY KEY, player_name varchar(30));
-CREATE TABLE chars(account_name varchar(30) REFERENCES accounts(account_name),
-char_name varchar(30), class_name varchar(30) REFERENCES classes(class_name),
-char_race varchar(20) REFERENCES races(race_name), char_level integer,
-last_seen timestamp, vis boolean, PRIMARY KEY (account_name, char_name));
+CREATE TABLE accounts(
+	account_name varchar(30) PRIMARY KEY
+	,player_name varchar(30)
+);
+CREATE TABLE chars(
+	account_name varchar(30) REFERENCES accounts(account_name)
+	,char_name varchar(30)
+	,class_name varchar(30) REFERENCES classes(class_name)
+	,char_race varchar(20) REFERENCES races(race_name)
+	,char_level integer
+	,last_seen timestamp
+	,vis boolean
+	,PRIMARY KEY (account_name, char_name)
+);
 CREATE INDEX idx_chars_name ON chars (LOWER(char_name));
 
 
 -- create new boot/load report tables and populate with base data
-CREATE TABLE boots(boot_id serial PRIMARY KEY, boot_time timestamp NOT NULL,
-	uptime varchar(10) NOT NULL);
+CREATE TABLE boots(
+	boot_id serial PRIMARY KEY
+	,boot_time timestamp NOT NULL
+	,uptime varchar(10) NOT NULL
+);
 INSERT INTO boots (boot_time, uptime) VALUES(CURRENT_TIMESTAMP - interval '00:35:00', '0:34:10');
-CREATE TABLE loads(boot_id integer REFERENCES boots(boot_id) NOT NULL, report_time timestamp NOT NULL, 
-	report_text varchar(320) NOT NULL, char_name varchar(30) NOT NULL, deleted boolean NOT NULL,
-	PRIMARY KEY (boot_id, report_time));
+CREATE TABLE loads(
+	boot_id integer REFERENCES boots(boot_id) NOT NULL
+	,report_time timestamp NOT NULL
+	,report_text varchar(320) NOT NULL
+	,char_name varchar(30) NOT NULL
+	,deleted boolean NOT NULL
+	,PRIMARY KEY (boot_id, report_time)
+);
 
 
 -- create new item stat tables and populate with base data
-CREATE TABLE enchants(ench_name varchar(25) PRIMARY KEY, ench_desc varchar(100));
+CREATE TABLE enchants(
+	ench_name varchar(25) PRIMARY KEY
+	,ench_desc varchar(100)
+);
 INSERT INTO enchants VALUES('Flaming', '+2d4 fire damage per hit');
 INSERT INTO enchants VALUES('Flaming Burst', '(+5d10 * crit mod of weapon) fire damage on critical hit');
 INSERT INTO enchants VALUES('Shocking', '+2d4 electricity damage per hit');
@@ -90,13 +124,16 @@ INSERT INTO enchants VALUES('Vampiric', '+3d4 and chance to heal back part of th
 INSERT INTO enchants VALUES('Bane', '+4d5 damage vs. one specified race, per hit.');
 INSERT INTO enchants VALUES('Keen', 'Double the critical hit range of the weapon.');
 INSERT INTO enchants VALUES('Brilliant', 'Blindness');
-CREATE TABLE attribs(attrib_abbr varchar(10) PRIMARY KEY, attrib_name varchar(25),
-attrib_display varchar(25));
+CREATE TABLE attribs(
+	attrib_abbr varchar(10) PRIMARY KEY
+	,attrib_name varchar(25)
+	,attrib_display varchar(25)
+);
 INSERT INTO attribs VALUES('armor', 'ARMOR', 'Armor');
 INSERT INTO attribs VALUES('hit', 'HITROLL', 'Hitroll');
 INSERT INTO attribs VALUES('dam', 'DAMROLL', 'Damroll');
-INSERT INTO attribs VALUES('hp', 'HITPOINTS', 'Hitpoints');
-INSERT INTO attribs VALUES('mv', 'MOVE', 'Movement');
+INSERT INTO attribs VALUES('HP', 'HITPOINTS', 'Hitpoints');
+INSERT INTO attribs VALUES('MV', 'MOVE', 'Movement');
 INSERT INTO attribs VALUES('mana', 'MANA', 'Mana');
 INSERT INTO attribs VALUES('svsp', 'SV_SPELL', 'Save Spell');
 INSERT INTO attribs VALUES('svbr', 'SV_BREATH', 'Save Breath');
@@ -136,8 +173,11 @@ INSERT INTO attribs VALUES('sf_prot', 'SPELL_FOCUS_PROTECTION', 'Spell Focus Pro
 INSERT INTO attribs VALUES('sf_spir', 'SPELL_FOCUS_SPIRIT', 'Spell Focus Spirit');
 INSERT INTO attribs VALUES('sf_sum', 'SPELL_FOCUS_SUMMONING', 'Spell Focus Summoning');
 INSERT INTO attribs VALUES('sf_tele', 'SPELL_FOCUS_TELEPORTATION', 'Spell Focus Teleportation');
-CREATE TABLE effects(effect_abbr varchar(10) PRIMARY KEY, effect_name varchar(25),
-effect_display varchar(25));
+CREATE TABLE effects(
+	effect_abbr varchar(10) PRIMARY KEY
+	,effect_name varchar(25)
+	,effect_display varchar(25)
+);
 INSERT INTO effects VALUES('pr_evil', 'PR-EVIL', 'Protection From Evil');
 INSERT INTO effects VALUES('pr_good', 'PR-GOOD', 'Protection From Good');
 INSERT INTO effects VALUES('dm', 'DET-MAGIC', 'Detect Magic');
@@ -149,7 +189,7 @@ INSERT INTO effects VALUES('sense', 'SENSE-LIFE', 'Sense Life');
 INSERT INTO effects VALUES('fly', 'FLY', 'Fly');
 INSERT INTO effects VALUES('lev', 'LEVITATE', 'Levitate');
 INSERT INTO effects VALUES('farsee', 'FARSEE', ' Farsee');
-INSERT INTO effects VALUES('slowpoi', 'SLOW-POISON', 'Slow Poison');
+INSERT INTO effects VALUES('slow_poi', 'SLOW-POISON', 'Slow Poison');
 INSERT INTO effects VALUES('haste', 'HASTE', 'Haste');
 INSERT INTO effects VALUES('sneak', 'SNEAK', 'Sneak');
 INSERT INTO effects VALUES('wb', 'WATERBREATH', 'Water Breathing');
@@ -159,8 +199,11 @@ INSERT INTO effects VALUES('mis_shield', 'MSL-SHLD', 'Missile Shield');
 INSERT INTO effects VALUES('blind', 'BLINDNESS', 'Blindness');
 INSERT INTO effects VALUES('slow', 'SLOW', 'Slowness');
 INSERT INTO effects VALUES('ultra', 'ULTRA', 'Ultravision');
-CREATE TABLE resists(resist_abbr varchar(10) PRIMARY KEY, resist_name varchar(25),
-resist_display varchar(25));
+CREATE TABLE resists(
+	resist_abbr varchar(10) PRIMARY KEY
+	,resist_name varchar(25)
+	,resist_display varchar(25)
+);
 INSERT INTO resists VALUES('fire', 'Fire', 'Fire');
 INSERT INTO resists VALUES('cold', 'Cold', 'Cold');
 INSERT INTO resists VALUES('acid', 'Acid', 'Acid');
@@ -182,12 +225,15 @@ INSERT INTO resists VALUES('psion', 'Psi', 'Psionic');
 INSERT INTO resists VALUES('neg', 'Neg', 'Negative');
 INSERT INTO resists VALUES('pos', 'Pos', 'Positive');
 INSERT INTO resists VALUES('sonic', 'Sonic', 'Sonic');
-CREATE TABLE restricts(restrict_abbr varchar(10) PRIMARY KEY, restrict_name varchar(25));
+CREATE TABLE restricts(
+	restrict_abbr varchar(10) PRIMARY KEY
+	,restrict_name varchar(25)
+);
 INSERT INTO restricts VALUES('!goodrace', 'ANTI-GOODRACE');
 INSERT INTO restricts VALUES('!evilrace', 'ANTI-EVILRACE');
-INSERT INTO restricts VALUES('!war', 'NO-WARRIOR');
+INSERT INTO restricts VALUES('!fighter', 'NO-WARRIOR');
 INSERT INTO restricts VALUES('!thief', 'NO-THIEF');
-INSERT INTO restricts VALUES('!cleric', 'NO-CLERIC');
+INSERT INTO restricts VALUES('!priest', 'NO-CLERIC');
 INSERT INTO restricts VALUES('!mage', 'NO-MAGE');
 INSERT INTO restricts VALUES('!good', 'ANTI-GOOD');
 INSERT INTO restricts VALUES('!neut', 'ANTI-NEUTRAL');
@@ -214,7 +260,7 @@ INSERT INTO restricts VALUES('!rang', 'ANTI-RANGER');
 INSERT INTO restricts VALUES('!pal', 'ANTI-PALADIN');
 INSERT INTO restricts VALUES('!ap', 'ANTI-ANTIPALADIN');
 INSERT INTO restricts VALUES('!dire', 'ANTI-DIRERAIDER?');
-INSERT INTO restricts VALUES('!cler', 'ANTI-CLERIC');
+INSERT INTO restricts VALUES('!cleric', 'ANTI-CLERIC');
 INSERT INTO restricts VALUES('!druid', 'ANTI-DRUID');
 INSERT INTO restricts VALUES('!sham', 'ANTI-SHAMAN');
 INSERT INTO restricts VALUES('!rogue', 'ANTI-THIEF');
@@ -227,31 +273,37 @@ INSERT INTO restricts VALUES('!necro', 'ANTI-NECROMANCER');
 INSERT INTO restricts VALUES('!illus', 'ANTI-ILLUSIONIST');
 INSERT INTO restricts VALUES('!psi', 'ANTI-PSIONICIST');
 INSERT INTO restricts VALUES('!lich', 'ANTI-LICH');
-CREATE TABLE flags(flag_abbr varchar(10) PRIMARY KEY, flag_name varchar(25),
-flag_display varchar(25));
-INSERT INTO flags VALUES('nosum', 'NOSUMMON', 'No Summon');
-INSERT INTO flags VALUES('nosleep', 'NOSLEEP', 'No Sleep');
-INSERT INTO flags VALUES('nocharm', 'NOCHARM', 'No Charm');
-INSERT INTO flags VALUES('noburn', 'NOBURN', 'No Burn');
-INSERT INTO flags VALUES('nodrop', 'NODROP', 'No Drop');
+CREATE TABLE flags(
+	flag_abbr varchar(10) PRIMARY KEY
+	,flag_name varchar(25)
+	,flag_display varchar(25)
+);
+INSERT INTO flags VALUES('no_sum', 'NOSUMMON', 'No Summon');
+INSERT INTO flags VALUES('no_sleep', 'NOSLEEP', 'No Sleep');
+INSERT INTO flags VALUES('no_charm', 'NOCHARM', 'No Charm');
+INSERT INTO flags VALUES('no_burn', 'NOBURN', 'No Burn');
+INSERT INTO flags VALUES('no_drop', 'NODROP', 'No Drop');
 INSERT INTO flags VALUES('two_hand', 'TWOHANDS', 'Two Handed');
 INSERT INTO flags VALUES('lit', 'LIT', 'Lit');
 INSERT INTO flags VALUES('invis', 'INVISIBLE', 'Invisible');
 INSERT INTO flags VALUES('float', 'FLOAT', 'Float');
-INSERT INTO flags VALUES('noloc', 'NOLOCATE', 'No Locate');
-INSERT INTO flags VALUES('nosell', 'NOSELL', 'No Sell');
+INSERT INTO flags VALUES('no_loc', 'NOLOCATE', 'No Locate');
+INSERT INTO flags VALUES('no_sell', 'NOSELL', 'No Sell');
 INSERT INTO flags VALUES('transient', 'TRANSIENT', 'Transient');
 INSERT INTO flags VALUES('magic', 'MAGIC', 'Magic');
 INSERT INTO flags VALUES('bless', 'BLESS', 'Bless');
 INSERT INTO flags VALUES('hidden', 'SECRET', 'Hidden');
-INSERT INTO flags VALUES('norent', 'NORENT', 'No Rent');
+INSERT INTO flags VALUES('no_rent', 'NORENT', 'No Rent');
 INSERT INTO flags VALUES('glow', 'GLOW', 'Glowing');
 INSERT INTO flags VALUES('dark', 'DARK', 'Dark');
-INSERT INTO flags VALUES('notake', 'NOTAKE', 'No Take');
+INSERT INTO flags VALUES('no_take', 'NOTAKE', 'No Take');
 INSERT INTO flags VALUES('whole_head', 'WHOLE-HEAD', 'Whole Head');
 INSERT INTO flags VALUES('whole_body', 'WHOLE-BODY', 'Whole Body');
-CREATE TABLE slots(slot_abbr varchar(10) PRIMARY KEY, worn_slot varchar(25),
-slot_display varchar(25));
+CREATE TABLE slots(
+	slot_abbr varchar(10) PRIMARY KEY
+	,worn_slot varchar(25)
+	,slot_display varchar(25)
+);
 INSERT INTO slots VALUES('head', 'HEAD', 'Head');
 INSERT INTO slots VALUES('eyes', 'EYES', 'Eyes');
 INSERT INTO slots VALUES('ear', 'EARRING', 'Ear');
@@ -277,8 +329,11 @@ INSERT INTO slots VALUES('component', 'COMPONENT_BAG', 'Component Bag');
 INSERT INTO slots VALUES('learn', 'LEARN', E'Can\'t Wear');
 INSERT INTO slots VALUES('light', 'LIGHT', E'Can\'t Wear');
 INSERT INTO slots VALUES('throw', 'THROW', E'Can\'t Wear');
-CREATE TABLE item_types(type_abbr varchar(10) PRIMARY KEY, item_type varchar(25),
-type_display varchar(25));
+CREATE TABLE item_types(
+	type_abbr varchar(10) PRIMARY KEY
+	,item_type varchar(25)
+	,type_display varchar(25)
+);
 INSERT INTO item_types VALUES('armor', 'ARMOR', 'Armor');
 INSERT INTO item_types VALUES('worn', 'WORN', 'Worn');
 INSERT INTO item_types VALUES('weapon', 'WEAPON', 'Weapon');
@@ -311,7 +366,10 @@ INSERT INTO item_types VALUES('treasure', 'TREASURE', 'Treasure');
 INSERT INTO item_types VALUES('trash', 'TRASH', 'Trash');
 INSERT INTO item_types VALUES('other', 'OTHER', 'Other');
 INSERT INTO item_types VALUES('teleport', 'TELEPORT', 'Teleport');
-CREATE TABLE zones(zone_abbr varchar(25) PRIMARY KEY, zone_name varchar(150));
+CREATE TABLE zones(
+	zone_abbr varchar(25) PRIMARY KEY
+	,zone_name varchar(150)
+);
 INSERT INTO zones VALUES('SF', 'Southern Forest');
 INSERT INTO zones VALUES('Jot', 'Jotunheim');
 INSERT INTO zones VALUES('Monastery', 'Abandoned Monastery');
@@ -431,7 +489,7 @@ INSERT INTO zones VALUES('Keprum', E'Keprum Vhai\'Rhel');
 INSERT INTO zones VALUES('FK', 'Keep of Finn McCumhail');
 INSERT INTO zones VALUES('Jungles of Ssrynss', 'Jungles of Ssrynss');
 INSERT INTO zones VALUES('Hyssk', 'Jungle City of Hyssk');
-INSERT INTO zones VALUES('Izans', E'Izan\'s Floating Fortress');
+INSERT INTO zones VALUES(E'Izan's', E'Izan\'s Floating Fortress');
 INSERT INTO zones VALUES('IxP', 'Ixarkon Prison');
 INSERT INTO zones VALUES('Ix', 'Ixarkon');
 INSERT INTO zones VALUES('Ice Prison', 'Ice Prison');
@@ -545,12 +603,22 @@ INSERT INTO zones VALUES('VT', 'Viperstongue Outpost');
 INSERT INTO zones VALUES('Graydawn', 'Valley of Graydawn');
 INSERT INTO zones VALUES('Crushk', 'Valley of Crushk');
 INSERT INTO zones VALUES('Unknown', 'Unknown');
-CREATE TABLE mobs(mob_name varchar(150) PRIMARY KEY, mob_abbr varchar(25),
-from_zone varchar(10) REFERENCES zones(zone_abbr), from_quest boolean,
-has_quest boolean, is_rare boolean, from_invasion boolean);
-CREATE TABLE specials(item_type varchar(10) REFERENCES item_types(type_abbr),
-spec_abbr varchar(10), spec_display varchar(25), PRIMARY KEY (item_type, spec_abbr));
-INSERT INTO specials VALUES('armor', 'ac', 'Armor Class'); -- intac
+CREATE TABLE mobs(
+	mob_name varchar(150) PRIMARY KEY
+	,mob_abbr varchar(25)
+	,from_zone varchar(10) REFERENCES zones(zone_abbr)
+	,from_quest boolean
+	,has_quest boolean
+	,is_rare boolean
+	,from_invasion boolean
+);
+CREATE TABLE specials(
+	item_type varchar(10) REFERENCES item_types(type_abbr)
+	,spec_abbr varchar(10)
+	,spec_display varchar(25)
+	,PRIMARY KEY (item_type, spec_abbr)
+);
+INSERT INTO specials VALUES('armor', 'AC', 'Armor Class'); -- intac
 INSERT INTO specials VALUES('crystal', 'psp', 'Crystal PSP'); -- varpsp
 INSERT INTO specials VALUES('spellbook', 'pages', 'Pages'); -- varpages
 INSERT INTO specials VALUES('container', 'holds', 'Capacity'); -- varholds
@@ -583,31 +651,31 @@ INSERT INTO specials VALUES('weapon', 'crit', 'Crit Chance'); -- varcrange
 INSERT INTO specials VALUES('weapon', 'multi', 'Crit Multiplier'); -- varcbonus
 INSERT INTO specials VALUES('ammo', 'dice', 'Damage Dice'); -- vardice
 CREATE TABLE items(
-item_id serial PRIMARY KEY
-,item_name varchar(100) NOT NULL
-,keywords varchar(100)
-,weight integer
-,c_value integer
-,item_type varchar(10) REFERENCES item_types(type_abbr)
-,attrib1 varchar(25) REFERENCES attribs(attrib_abbr)
-,attrib1_value integer
-,attrib2 varchar(25) REFERENCES attribs(attrib_abbr)
-,attrib2_value integer
-,from_zone varchar(25) REFERENCES zones(zone_abbr)
-,from_mob varchar(150) REFERENCES mobs(mob_name)
-,no_identify boolean
-,is_rare boolean
-,from_store boolean
-,from_quest boolean
-,for_quest boolean
-,from_invasion boolean
-,out_of_game boolean
-,short_stats varchar(450)
-,long_stats varchar(900)
-,full_stats text
-,comments text
-,last_id date
-,tsv tsvector
+	item_id serial PRIMARY KEY
+	,item_name varchar(100) NOT NULL
+	,keywords varchar(100)
+	,weight integer
+	,c_value integer
+	,item_type varchar(10) REFERENCES item_types(type_abbr)
+	,attrib1 varchar(25) REFERENCES attribs(attrib_abbr)
+	,attrib1_value integer
+	,attrib2 varchar(25) REFERENCES attribs(attrib_abbr)
+	,attrib2_value integer
+	,from_zone varchar(25) REFERENCES zones(zone_abbr)
+	,from_mob varchar(150) REFERENCES mobs(mob_name)
+	,no_identify boolean
+	,is_rare boolean
+	,from_store boolean
+	,from_quest boolean
+	,for_quest boolean
+	,from_invasion boolean
+	,out_of_game boolean
+	,short_stats varchar(450)
+	,long_stats varchar(900)
+	,full_stats text
+	,comments text
+	,last_id date
+	,tsv tsvector
 );
 CREATE INDEX idx_item_name ON items (item_name);
 UPDATE items SET tsv =
@@ -615,23 +683,61 @@ UPDATE items SET tsv =
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE
 	ON items FOR EACH ROW EXECUTE PROCEDURE
 	tsvector_update_trigger(tsv, 'pg_catalog.english', item_name, keywords);
-CREATE TABLE item_procs(item_id integer REFERENCES items(item_id), proc_name text,
-proc_type varchar(25), proc_desc varchar(25), proc_trig varchar(25), proc_effect varchar(25),
-PRIMARY KEY (item_id, proc_name));
-CREATE TABLE item_slots(item_id integer REFERENCES items(item_id), slot_abbr varchar(10)
-REFERENCES slots(slot_abbr), PRIMARY KEY (item_id, slot_abbr));
-CREATE TABLE item_flags(item_id integer REFERENCES items(item_id), flag_abbr varchar(10)
-REFERENCES flags(flag_abbr), PRIMARY KEY (item_id, flag_abbr));
-CREATE TABLE item_restricts(item_id integer REFERENCES items(item_id), restrict_abbr varchar(10)
-REFERENCES restricts(restrict_abbr), PRIMARY KEY (item_id, restrict_abbr));
-CREATE TABLE item_resists(item_id integer REFERENCES items(item_id), resist_abbr varchar(10)
-REFERENCES resists(resist_abbr), resist_value integer, PRIMARY KEY (item_id, resist_abbr));
-CREATE TABLE item_effects(item_id integer REFERENCES items(item_id), effect_abbr varchar(10)
-REFERENCES effects(effect_abbr), PRIMARY KEY (item_id, effect_abbr));
-CREATE TABLE item_specials(item_id integer REFERENCES items(item_id), item_type varchar(10),
-spec_abbr varchar(10), spec_value varchar(30),
-FOREIGN KEY (item_type, spec_abbr) REFERENCES specials (item_type, spec_abbr),
-PRIMARY KEY (item_id, item_type, spec_abbr));
-CREATE TABLE item_enchants(item_id integer REFERENCES items(item_id), ench_name varchar(25)
-REFERENCES enchants(ench_name), dam_pct integer, freq_pct integer,
-sv_mod integer, duration integer, PRIMARY KEY (item_id, ench_name));
+CREATE TABLE item_procs(
+	item_id integer REFERENCES items(item_id)
+	,proc_name text
+	,proc_type varchar(25)
+	,proc_desc varchar(25)
+	,proc_trig varchar(25)
+	,proc_effect varchar(25)
+	,PRIMARY KEY (item_id, proc_name)
+);
+CREATE TABLE item_slots(
+	item_id integer REFERENCES items(item_id)
+	,slot_abbr varchar(10) REFERENCES slots(slot_abbr)
+	,PRIMARY KEY (item_id, slot_abbr)
+);
+CREATE TABLE item_flags(
+	item_id integer REFERENCES items(item_id)
+	,flag_abbr varchar(10) REFERENCES flags(flag_abbr)
+	,PRIMARY KEY (item_id, flag_abbr)
+);
+CREATE TABLE item_restricts(
+	item_id integer REFERENCES items(item_id)
+	,restrict_abbr varchar(10) REFERENCES restricts(restrict_abbr)
+	,PRIMARY KEY (item_id, restrict_abbr)
+);
+CREATE TABLE item_resists(
+	item_id integer REFERENCES items(item_id)
+	,resist_abbr varchar(10) REFERENCES resists(resist_abbr)
+	,resist_value integer
+	,PRIMARY KEY (item_id, resist_abbr)
+);
+CREATE TABLE item_effects(
+	item_id integer REFERENCES items(item_id)
+	,effect_abbr varchar(10) REFERENCES effects(effect_abbr)
+	,PRIMARY KEY (item_id, effect_abbr)
+);
+CREATE TABLE item_specials(
+	item_id integer REFERENCES items(item_id)
+	,item_type varchar(10)
+	,spec_abbr varchar(10)
+	,spec_value varchar(30)
+	,FOREIGN KEY (item_type, spec_abbr) REFERENCES specials (item_type, spec_abbr)
+	,PRIMARY KEY (item_id, item_type, spec_abbr)
+);
+CREATE TABLE item_enchants(
+	item_id integer REFERENCES items(item_id)
+	,ench_name varchar(25) REFERENCES enchants(ench_name)
+	,dam_pct integer
+	,freq_pct integer
+	,sv_mod integer
+	,duration integer
+	,PRIMARY KEY (item_id, ench_name)
+);
+CREATE TABLE item_attribs(
+	item_id integer REFERENCES items(item_id)
+	,attrib_abbr varchar(25) REFERENCES attribs(attrib_abbr)
+	,attrib_value integer
+	,PRIMARY KEY (item_id, attrib_abbr)
+);
