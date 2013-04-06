@@ -4,8 +4,6 @@
 Python source code - This is a program thingy to do things and stuff
 """
 
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
-
 # kegor's functions: http://z15.invisionfree.com/Triterium_BBS/index.php?showforum=161
 # python tutorial: http://docs.python.org/2/tutorial/index.html
 # database walkthrough: http://zetcode.com/db/postgresqlpythontutorial/

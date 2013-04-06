@@ -1,12 +1,10 @@
 #!/usr/bin/python
 
 """
-Python source code - Developed by kristi.michaels@gmail.com to
+Python source code - Developed to 
 run tests against parseTell.py, parseWho.py, and parseTime.py,
 which are all components of the TorilMUD bot Katumi
 """
-
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
 import sys
 import string

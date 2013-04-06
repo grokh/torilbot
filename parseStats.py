@@ -5,8 +5,6 @@ Python source code - Reads a file containing item stats in base 'identify' forma
 splits it into appropriate variables, and stores them in the stat DB
 """
 
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
-
 import sys
 import psycopg2
 import locale
@@ -174,10 +172,18 @@ def parse_identify():
                     pass
                 elif "Combat Critical :" in line:
                     pass
-                elif "spells of:" in line:
+                elif "spells of:" in line: # potion, scroll
                     pass # Level 35 spells of: fly on its own line :/
+                elif "spell of:" in line: # staff, wand
+                    pass
+                elif "charges, with" in line: # wand, staff
+                    pass # Has 5 charges, with 4 charges left.
                 elif "Total Pages:" in line:
                     pass # Total Pages: 300
+                elif "Poison affects" in line:
+                    pass # Poison affects as blindness at level 25.
+                elif "Applications remaining" in line:
+                    pass # Applications remaining: 10
             # back to 'for item in items' iteration
             # check if exact name is already in DB
             query = "SELECT * FROM items WHERE item_name = %s"
@@ -347,7 +353,7 @@ def short_stats():
             for res in restr:
                 i += ' '+res[0]
         type = ' *'
-        if item[0][16] != None:
+        if item[0][16]:
             type += ' NoID'
         if item[0][6] != None:
             type += ' Wt:'+str(item[0][6])

@@ -5,8 +5,6 @@ Python source code - Call this script to convert Kegor/Nerun's item stat DB
 to new format after cleaning up all the old entries
 """
 
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
-
 import sys
 import psycopg2
 from datetime import datetime, timedelta

@@ -5,8 +5,6 @@ Python source code - Call this script to update boot times, uptimes, and boot ID
 for load reporting and such
 """
 
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
-
 import sys
 import psycopg2
 import notify

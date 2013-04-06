@@ -4,8 +4,6 @@
 Python source code - This is a program thingy to do things and stuff
 """
 
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
-
 import sys
 import psycopg2
 import string
