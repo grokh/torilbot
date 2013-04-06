@@ -26,7 +26,10 @@
 #PATHDIR          {d}                     {u}                          {32}
 
 
-#nop tokens.tin sets variables: acct {Account}, char {Character}, and cpw {Password}
+#nop tokens.tin sets the following variables to correct info
+#var {acct} {Account}
+#var {char} {Character}
+#var {cpw} {Password}
 #class tokens read tokens.tin
 
 
