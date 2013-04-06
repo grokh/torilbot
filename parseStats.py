@@ -18,7 +18,7 @@ locale.setlocale(locale.LC_ALL, 'en_US')
 
 parser = OptionParser()
 
-parser.add_option("-i", "--identify", default='newstats.txt', metavar='file', 
+parser.add_option("-i", "--identify", default=False, metavar='file', 
         action='store', type='string',
         help='Parse a file and create SQL for DB import.')
 parser.add_option("-s", "--short", action='store_true', default=False,
@@ -463,8 +463,8 @@ def long_stats():
         if len(specs) > 0:
             i += ', '+specs[0][2]+': '+str(specs[0][1])
         query = "SELECT i.attrib_abbr, attrib_value, attrib_display \
-                FROM item_attribs i, attribs a \
-                WHERE i.attrib_abbr = a.attrib_abbr AND item_id = %s"
+        FROM item_attribs i, attribs a \
+        WHERE i.attrib_abbr = a.attrib_abbr AND item_id = %s"
         attrs = db(query, params)
         if len(attrs) > 0:
             i += ' *'
@@ -484,6 +484,8 @@ def long_stats():
         AND i.spec_abbr != 'ac' \
         GROUP BY i.spec_abbr, spec_value, spec_display"
         specs = db(query, params)
+        # should really switch this out into lots of if/else for proper
+        # formatting, right now it's bugged
         if len(specs) > 0:
             i += ' *'
             for spec in specs:
