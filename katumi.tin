@@ -33,7 +33,7 @@
 #alias {logon} {
 	#format {time} {%T};
 	#format {logdate} {%Y.%M.%D} {$time $time $time};
-	#log append logs/$char.$logdate.txt;
+	#log append logs/$char.$logdate.log;
 }
 #alias {login} {
 	#act {               .,:7I::,.            } {
