@@ -238,8 +238,9 @@ elif cmd == 'fstat':
     reply("'fstat' command coming soon!")
     (att, comp, val) = '', '', 0
     opers = oper.split(', ')
-    query = "SELECT short_stats FROM items, attribs WHERE attrib1 = attrib_abbr \
-    AND attrib1 = %s AND attrib1_value > %s;"
+    query = "SELECT short_stats FROM items i, item_attribs a \
+            WHERE i.item_id = a.item_id \
+            AND attrib_abbr = %s AND attrib_value > %s;"
     params = (att,val)
     rows = db(query, params)
 elif cmd == 'who':
