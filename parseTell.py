@@ -269,6 +269,8 @@ elif cmd == 'fstat':
         if len(rows) > 0:
             for row in rows:
                 reply(row[0])
+    else:
+        reply(syntax)
 elif cmd == 'who':
     query = "SELECT account_name, char_name FROM chars WHERE vis = true AND account_name \
     = (SELECT account_name FROM chars WHERE LOWER(char_name) = LOWER(%s))"
