@@ -58,12 +58,12 @@
 	#format {time} {%t} {%F %T};
 	#line log {logs/tells.log} {$time - %0};
 
-    #var {chat} {%2};
-    #replace {chat} {"} {'};
-    #script {answer} {./parseTell.py "%1" "$chat" &};
-    #foreach {$answer} {cmd} {
-        #if {"$cmd" != "%d"} {$cmd};
-    };
+	#var {chat} {%2};
+	#replace {chat} {"} {'};
+	#script {answer} {./parseTell.py "%1" "$chat" &};
+	#foreach {$answer} {cmd} {
+		#if {"$cmd" != "%d"} {$cmd};
+	};
 }
 #act {You tell %1 '%2'$} {
 	#format {time} {%t} {%F %T};
