@@ -125,7 +125,8 @@ if len(tell) > 1: # If there's actually an operant
 site = 'http://www.example.com/' # Website for stuff
 info = 'I am a Helper Bot (Beta). Valid commands: ?, help <cmd>, hidden?, \
 who <char>, char <char>, clist <char>, find <char>, class <class>, \
-delalt <char>, addalt <char>, lr, lr <report>, stat <item>, astat <item>. \
+delalt <char>, addalt <char>, lr, lr <report>, stat <item>, astat <item>, \
+fstat <att> <comp> <val>. \
 For further information, tell katumi help <cmd>'
 syntax = 'Invalid syntax. For valid syntax: tell katumi ?, \
 tell katumi help <cmd>'
