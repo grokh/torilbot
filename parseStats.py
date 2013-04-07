@@ -488,8 +488,22 @@ def long_stats():
         # formatting, right now it's bugged
         if len(specs) > 0:
             i += ' *'
-            for spec in specs:
-                i += ', '+spec[2]+': '+str(spec[1])
+            if item[0][1] == 'crystal' or item[0][1] == 'spellbook' or \
+            item[0][1] == 'comp_bag' or item[0][1] == 'ammo':
+                for spec in specs:
+                    i += ', '+spec[2]+': '+str(spec[1])
+            elif item[0][1] == 'container':
+                pass
+            elif item[0][1] == 'poison':
+                pass
+            elif item[0][1] == 'scroll' or item[0][1] == 'potion':
+                pass
+            elif item[0][1] == 'staff' or item[0][1] == 'wand':
+                pass
+            elif item[0][1] == 'instrument':
+                pass
+            elif item[0][1] == 'weapon':
+                pass
         query = "SELECT i.effect_abbr, effect_display \
         FROM item_effects i, effects e \
         WHERE i.effect_abbr = e.effect_abbr AND item_id = %s"
