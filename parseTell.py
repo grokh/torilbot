@@ -226,7 +226,14 @@ elif cmd == 'help':
                 "are a little buggy right now since I haven't put much time "+
                 "into it.")
     elif oper == 'fstat':
-        reply("'fstat' command coming soon!")
+        reply("Syntax: tell katumi fstat <stat> <sym> <num>"+
+        "[, <stat> <sym> <num>] -- "+
+        "Example: tell katumi fstat str > 0, maxstr < 50 -- "+
+        "Katumi provides up to 10 results which match the parameters.")
+        reply("Type attribs as they appear in stats: str, maxstr, svsp,"+
+        " sf_illu, etc. Valid comparisons are >, <, and =. Can only search on"+
+        " up to two attributes at a time. Other options will be added later."
+        )
 elif (cmd == 'hidden' or cmd == 'hidden?' or cmd == 'hidden/') and oper == '':
     if char != 'Someone':
         reply(char+' is NOT hidden')
@@ -235,14 +242,33 @@ elif cmd == 'stat':
 elif cmd == 'astat':
     reply(find_item('long_stats'))
 elif cmd == 'fstat':
-    reply("'fstat' command coming soon!")
     (att, comp, val) = '', '', 0
-    opers = oper.split(', ')
-    query = "SELECT short_stats FROM items i, item_attribs a \
-            WHERE i.item_id = a.item_id \
-            AND attrib_abbr = %s AND attrib_value > %s;"
-    params = (att,val)
-    rows = db(query, params)
+    opers = oper.split(',')
+    query = "SELECT short_stats FROM items"
+    params = ()
+    goodquery = False
+    for ops in opers:
+        fop = ops.split()
+        if len(fop) == 3:
+            att = fop[0]
+            comp = fop[1]
+            val = fop[2]
+            if comp in '=<>':
+                goodquery = True
+                if 'WHERE item_id' not in query:
+                    query += " WHERE item_id IN"
+                else:
+                    query += " AND item_id IN"
+                query += " (SELECT i.item_id FROM items i, item_attribs a \
+                WHERE i.item_id = a.item_id \
+                AND attrib_abbr = %s AND attrib_value "+comp+" %s)"
+                params += (att, val)
+    query += " LIMIT 10;"
+    if goodquery:
+        rows = db(query, params)
+        if len(rows) > 0:
+            for row in rows:
+                reply(row[0])
 elif cmd == 'who':
     query = "SELECT account_name, char_name FROM chars WHERE vis = true AND account_name \
     = (SELECT account_name FROM chars WHERE LOWER(char_name) = LOWER(%s))"
