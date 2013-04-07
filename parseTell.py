@@ -269,6 +269,8 @@ elif cmd == 'fstat':
         if len(rows) > 0:
             for row in rows:
                 reply(row[0])
+        else:
+            reply(notfound('item(s)'))
     else:
         reply(syntax)
 elif cmd == 'who':
