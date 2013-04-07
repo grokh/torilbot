@@ -243,36 +243,35 @@ elif cmd == 'stat':
 elif cmd == 'astat':
     reply(find_item('long_stats'))
 elif cmd == 'fstat':
-    (att, comp, val) = '', '', 0
     opers = oper.split(',')
     query = "SELECT short_stats FROM items"
     params = ()
     for ops in opers:
         fop = ops.split()
-        if fop[1] in '=<>' and len(fop) == 3:
+        if len(fop) == 3:
             att = fop[0]
             comp = fop[1]
             val = fop[2]
-            if 'WHERE' not in query:
-                query += " WHERE item_id IN"
-            else:
-                query += " AND item_id IN"
-            query += " (SELECT i.item_id FROM items i, item_attribs a \
-            WHERE i.item_id = a.item_id \
-            AND attrib_abbr = %s AND attrib_value "+comp+" %s)"
-            params += (att, val)
-        elif fop[0] == 'resist' and len(fop) == 2:
-            res = fop[1]
-            if 'WHERE' not in query:
-                query += " WHERE item_id IN"
-            else:
-                query += " AND item_id IN"
-            query += " (SELECT i.item_id FROM items i, item_resists r \
-            WHERE i.item_id = r.item_id \
-            AND resist_abbr = %s AND resist_value > 0)"
-            params += (res,)
-        else:
-            reply(syntax)
+            if comp in '=<>':
+                if 'WHERE' not in query:
+                    query += " WHERE item_id IN"
+                else:
+                    query += " AND item_id IN"
+                query += " (SELECT i.item_id FROM items i, item_attribs a \
+                WHERE i.item_id = a.item_id \
+                AND attrib_abbr = %s AND attrib_value "+comp+" %s)"
+                params += (att, val)
+        elif len(fop) == 2:
+            if fop[0] == 'resist':
+                res = fop[1]
+                if 'WHERE' not in query:
+                    query += " WHERE item_id IN"
+                else:
+                    query += " AND item_id IN"
+                query += " (SELECT i.item_id FROM items i, item_resists r \
+                WHERE i.item_id = r.item_id \
+                AND resist_abbr = %s AND resist_value > 0)"
+                params += (res,)
     query += " LIMIT 10;"
     if 'WHERE' in query:
         rows = db(query, params)
