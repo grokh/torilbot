@@ -227,12 +227,12 @@ elif cmd == 'help':
                 "into it.")
     elif oper == 'fstat':
         reply("Syntax: tell katumi fstat <stat> <sym> <num>"+
-        "[, <stat> <sym> <num>] -- "+
-        "Example: tell katumi fstat str > 0, maxstr < 50 -- "+
+        "[, <stat2> <sym2> <num2>][, resist <resist>] -- "+
+        "Example: tell katumi fstat maxagi > 0, resist fire -- "+
         "Katumi provides up to 10 results which match the parameters.")
         reply("Type attribs as they appear in stats: str, maxstr, svsp,"+
-        " sf_illu, etc. Valid comparisons are >, <, and =. Can only search on"+
-        " up to two attributes at a time. Other options will be added later."
+        " sf_illu, fire, unarm, etc. Valid comparisons are >, <, and =."+
+        " Resists check for a positive value. Other options will be added later."
         )
 elif (cmd == 'hidden' or cmd == 'hidden?' or cmd == 'hidden/') and oper == '':
     if char != 'Someone':
@@ -246,25 +246,34 @@ elif cmd == 'fstat':
     opers = oper.split(',')
     query = "SELECT short_stats FROM items"
     params = ()
-    goodquery = False
     for ops in opers:
         fop = ops.split()
-        if len(fop) == 3:
+        if fop[1] in '=<>' and len(fop) == 3:
             att = fop[0]
             comp = fop[1]
             val = fop[2]
-            if comp in '=<>':
-                goodquery = True
-                if 'WHERE item_id' not in query:
-                    query += " WHERE item_id IN"
-                else:
-                    query += " AND item_id IN"
-                query += " (SELECT i.item_id FROM items i, item_attribs a \
-                WHERE i.item_id = a.item_id \
-                AND attrib_abbr = %s AND attrib_value "+comp+" %s)"
-                params += (att, val)
+            if 'WHERE' not in query:
+                query += " WHERE item_id IN"
+            else:
+                query += " AND item_id IN"
+            query += " (SELECT i.item_id FROM items i, item_attribs a \
+            WHERE i.item_id = a.item_id \
+            AND attrib_abbr = %s AND attrib_value "+comp+" %s)"
+            params += (att, val)
+        elif fop[0] == 'resist' and len(fop) == 2:
+            res = fop[1]
+            if 'WHERE' not in query:
+                query += " WHERE item_id IN"
+            else:
+                query += " AND item_id IN"
+            query += " (SELECT i.item_id FROM items i, item_resists r \
+            WHERE i.item_id = r.item_id \
+            AND resist_abbr = %s AND resist_value > 0)"
+            params += (res,)
+        else:
+            reply(syntax)
     query += " LIMIT 10;"
-    if goodquery:
+    if 'WHERE' in query:
         rows = db(query, params)
         if len(rows) > 0:
             for row in rows:
