@@ -249,7 +249,7 @@ elif cmd == 'fstat':
     for ops in opers:
         fop = ops.split()
         if len(fop) == 3:
-            att = fop[0]
+            att = fop[0].lower()
             comp = fop[1]
             val = fop[2]
             if comp in '=<>':
@@ -262,8 +262,8 @@ elif cmd == 'fstat':
                 AND attrib_abbr = %s AND attrib_value "+comp+" %s)"
                 params += (att, val)
         elif len(fop) == 2:
-            if fop[0] == 'resist':
-                res = fop[1]
+            if fop[0].lower() == 'resist':
+                res = fop[1].lower()
                 if 'WHERE' not in query:
                     query += " WHERE item_id IN"
                 else:
