@@ -9,10 +9,9 @@ import psycopg2
 import string
 import datetime
 
+conn = psycopg2.connect(database='torildb', user='kalkinine')
 def db(query, params):
-	conn = None
 	try:
-		conn = psycopg2.connect(database='torildb', user='kalkinine')
 		cur = conn.cursor()
 		cur.execute(query, (params))
 		if query.startswith("SELECT"):
@@ -25,9 +24,6 @@ def db(query, params):
 				conn.rollback()
 		print 'Error %s' % e
 		sys.exit(1)
-	finally:
-		if conn:
-			conn.close()
 
 acct = ''
 char = sys.argv[1] # Character name
@@ -72,3 +68,5 @@ else: # it's a direct 'who <char>'
 		query = "INSERT INTO chars VALUES(%s, %s, %s, %s, %s, %s, true)"
 		params = (acct, char, clas, race, level, date)
 		db(query, params)
+
+conn.close()

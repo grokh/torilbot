@@ -10,10 +10,9 @@ import psycopg2
 import notify
 from datetime import datetime, timedelta
 
+conn = psycopg2.connect(database='torildb', user='kalkinine')
 def db(query, params):
-    conn = None
     try:
-        conn = psycopg2.connect(database='torildb', user='kalkinine')
         cur = conn.cursor()
         cur.execute(query, (params))
         if query.startswith("SELECT"):
@@ -26,9 +25,6 @@ def db(query, params):
                 conn.rollback()
         print 'Error %s' % e
         sys.exit(1)
-    finally:
-        if conn:
-            conn.close()
 
 # Accepts time since boot in format H:MM:SS
 curup = sys.argv[1]
@@ -59,3 +55,5 @@ else: # if not, update uptime
     query = "UPDATE boots SET uptime = %s WHERE boot_id = %s"
     params = (curup, oldid)
     db(query, params)
+
+conn.close()

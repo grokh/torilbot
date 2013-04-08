@@ -14,10 +14,9 @@ import psycopg2
 import string
 from datetime import datetime, timedelta, date
 
+conn = psycopg2.connect(database='torildb', user='kalkinine')
 def db(query, params):
-    conn = None
     try:
-        conn = psycopg2.connect(database='torildb', user='kalkinine')
         cur = conn.cursor()
         cur.execute(query, (params))
         if query.startswith("SELECT"):
@@ -30,9 +29,6 @@ def db(query, params):
                 conn.rollback()
         print 'Error %s' % e
         sys.exit(1)
-    finally:
-        if conn:
-            conn.close()
 
 def notfound(type):
     return '404 '+type+' not found: '+oper
@@ -431,3 +427,5 @@ elif cmd == 'lrdel':
             reply('No loads reported for current boot.')
 else:
     reply(syntax)
+
+conn.close()

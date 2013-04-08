@@ -241,20 +241,27 @@ def parse_identify():
             else:
                 sql = ('INSERT INTO items (item_name, keywords, weight, '
                         'c_value, item_type, full_stats, last_id) '
-                        'VALUES(%s, %s, %s, %s, %s, %s, %s);')
+                        'VALUES(%s, %s, %s, %s, %s, %s, %s) '
+                        'RETURNING item_id;')
                 params = (name, keys, wt, val, type, item, today)
-                conn = psycopg2.connect(database='torildb', user='kalkinine')
                 cur = conn.cursor()
                 print cur.mogrify(sql, (params))
+                id = 0 # cur.execute(sql, params) ? fetchall() ? conn.commit() ?
                 # build item_slots insert
+                sql = ('INSERT INTO item_slots VALUES (%s, %s)')
+                for slot in slots:
+                    if slot != 'NOBITS':
+                        params = (1, slot)
+                        print cur.mogrify(sql, (params))
                 # build item_specials insert
                 # build item_attribs insert
                 # build item_flags insert
                 # build item_restricts insert
                 # build item_effects insert
                 # build item_enchants insert
+                # build item_resists insert (when it's parseable)
         # send all insert/update queries as a .sql file to review
-        # manual updates: resists, procs, spells for potion/scroll/staff/wand,
+        # manual updates: resists (for now) procs, spells for potion/scroll/staff/wand,
         # container holds/wtless, zone, quest/used/rare/invasion/store
 
 # generate short_stats from new items tables
