@@ -67,6 +67,7 @@ def import_legacy():
             db(query, params)
 
 def parse_identify():
+    today = datetime.today()
     cmd = 'cat'
     file = options.identify
     stats = Popen([cmd, file], stdout=PIPE, stderr=PIPE).communicate()
@@ -81,16 +82,13 @@ def parse_identify():
         items = items.split('\n\n')
         for item in items:
             # instantiate a blank item template with all variables at default
-            (flags, restrs) = [], []
+            (flags, restrs, slots, effs) = [], [], [], []
             (name, keys, type, ench, dice, wtype, wclass) = '', '', '', '', '', '', ''
-            (slots, effs) = [], []
             (wt, val, ac, crit, multi) = 0, 0, 0, 0, 0
             (dam_pct, freq_pct, dam_mod, duration) = 0, 0, 0, 0
-            (attrib1, attrib2) = '', ''
-            (atval1, atval2) = 0, 0
+            (attrib1, attrib2, ptype) = '', '', ''
+            (atval1, atval2, qual, stut, mlvl) = 0, 0, 0, 0, 0
             (pgs, lvl, apps, mchg, cchg) = 0, 0, 0, 0, 0
-            (qual, stut, mlvl) = 0, 0, 0
-            ptype = ''
             lines = item.splitlines()
             for line in lines:
                 line = line.strip()
@@ -99,7 +97,8 @@ def parse_identify():
                     name = name[:len(name)-1]
                 elif "Keyword '" in line: # keywords, type
                     # bug: if keywords too long, can't split properly
-                    # can't figure out how to programatically put on same line
+                    #regex: re.sub(r"Keyword '<stuff>', Item type: [A-Z_]+",' ',items)
+                    #with a \n anywhere in the above line after Keyword '
                     kt = line.split(',')
                     keys = kt[0].replace("Keyword '",'')
                     keys = keys.strip("' ")
@@ -233,7 +232,7 @@ def parse_identify():
             rows = db(query, params)
             if len(rows) > 0:
                 # if already in DB, check each stat to see if it matches
-                pass
+                #print name+' is already in the DB.'
                 # if it does match, update the date of last_id
                 if len(rows) > 0:
                     pass
@@ -243,7 +242,20 @@ def parse_identify():
                     pass
             # if it's not in the DB, compile full insert queries
             else:
-                pass
+                sql = ('INSERT INTO items (item_name, keywords, weight, '
+                        'c_value, item_type, full_stats, last_id) '
+                        'VALUES(%s, %s, %s, %s, %s, %s, %s);')
+                params = (name, keys, wt, val, type, item, today)
+                conn = psycopg2.connect(database='torildb', user='kalkinine')
+                cur = conn.cursor()
+                print cur.mogrify(sql, (params))
+                # build item_slots insert
+                # build item_specials insert
+                # build item_attribs insert
+                # build item_flags insert
+                # build item_restricts insert
+                # build item_effects insert
+                # build item_enchants insert
         # send all insert/update queries as a .sql file to review
         # manual updates: resists, procs, spells for potion/scroll/staff/wand,
         # container holds/wtless, zone, quest/used/rare/invasion/store
