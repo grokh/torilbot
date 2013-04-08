@@ -29,10 +29,10 @@ parser.add_option("-e", "--legacy", action='store_true', default=False,
         help='Parse legacy item DB for import to new items DB.')
 (options, args) = parser.parse_args()
 
+conn = psycopg2.connect(database='torildb', user='kalkinine')
+
 def db(query, params):
-    conn = None
     try:
-        conn = psycopg2.connect(database='torildb', user='kalkinine')
         cur = conn.cursor()
         cur.execute(query, (params))
         if query.startswith("SELECT"):
@@ -45,9 +45,6 @@ def db(query, params):
                 conn.rollback()
         print 'Error %s' % e
         sys.exit(1)
-    finally:
-        if conn:
-            conn.close()
 
 # import short_stats from torileq website output
 def import_legacy():
@@ -603,3 +600,4 @@ if options.long:
 timediff = datetime.now() - timestart
 print 'The script took '+str(timediff)
 
+conn.close()
