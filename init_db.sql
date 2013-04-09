@@ -737,3 +737,27 @@ CREATE TABLE item_attribs(
 	,attrib_value integer
 	,PRIMARY KEY (item_id, attrib_abbr)
 );
+
+CREATE TABLE legacy (
+	id serial PRIMARY KEY,
+	varName text, varKeywords text, varZone text, varLoad text, varQuest text, varNoID text,
+	varType text, varWorn text, varWt text, varHolds text, varValue text, intAC integer,
+	varArmor text, varPages text, varHP text, varDice text, varWType text, varWClass text,
+	varCRange text, varCBonus text, intHit integer, intDam integer, varSpell text,
+	varBreath text, varPara text, varPetri text, varRod text, varStr text, varAgi text,
+	varDex text, varCon text, varPow text, varInt text, varWis text, varCha text,
+	varMaxstr text, varMaxagi text, varMaxdex text, varMaxcon text, varMaxpow text,
+	varMaxint text, varMaxwis text, varMaxcha text, varLuck text, varKarma text, varMana text,
+	varMove text, varAge text, varWeight text, varHeight text, varMR text, varSFEle text,
+	varSFEnc text, varSFHeal text, varSFIll text, varSFInv text, varSFNature text,
+	varSFNec text, varSFProt text, varSFPsi text, varSFSpirit text, varSFSum text,
+	varSFTele text, varPsp text, varQuality text, varStutter text, varMin text,
+	varPoison text, varLevel text, varApplications text, varCharge text, varMaxcharge text,
+	varWlevel text, varWspell text, varRes text, varCRes text, varEnchant text,
+	varEffects text, varCrit text, varBonus text, varCeffects text, varUnarmd text,
+	varSlash text, varBludgn text, varPierce text, varRange text, varSpells text,
+	varSonic text, varPos text, varNeg text, varPsi text, varMental text, varGoods text,
+	varEvils text, varLaw text, varChaos text, varForce text, varFire text, varCold text,
+	varElect text, varAcid text, varPois text, varAflags text, varIflags text, varDate text
+);
+\COPY legacy (varName, varKeywords, varZone, varLoad, varQuest, varNoID, varType, varWorn, varWt, varHolds, varValue, intAC, varArmor, varPages, varHP, varDice, varWType, varWClass, varCRange, varCBonus, intHit, intDam, varSpell, varBreath, varPara, varPetri, varRod, varStr, varAgi, varDex, varCon, varPow, varInt, varWis, varCha, varMaxstr, varMaxagi, varMaxdex, varMaxcon, varMaxpow, varMaxint, varMaxwis, varMaxcha, varLuck, varKarma, varMana, varMove, varAge, varWeight, varHeight, varMR, varSFEle, varSFEnc, varSFHeal, varSFIll, varSFInv, varSFNature, varSFNec, varSFProt, varSFPsi, varSFSpirit, varSFSum, varSFTele, varPsp, varQuality, varStutter, varMin, varPoison, varLevel, varApplications, varCharge, varMaxcharge, varWlevel, varWspell, varRes, varCRes, varEnchant, varEffects, varCrit, varBonus, varCeffects, varUnarmd, varSlash, varBludgn, varPierce, varRange, varSpells, varSonic, varPos, varNeg, varPsi, varMental, varGoods, varEvils, varLaw, varChaos, varForce, varFire, varCold, varElect, varAcid, varPois, varAflags, varIflags, varDate) FROM 'torileq_tab_2013_02_15.txt' WITH DELIMITER E'\t'
