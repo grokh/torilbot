@@ -11,10 +11,9 @@ from datetime import datetime, timedelta
 
 timestart = datetime.now()
 
+conn = psycopg2.connect(database='torildb', user='kalkinine')
 def db(query, params):
-    conn = None
     try:
-        conn = psycopg2.connect(database='torildb', user='kalkinine')
         cur = conn.cursor()
         cur.execute(query, (params))
         if query.startswith("SELECT"):
@@ -27,9 +26,6 @@ def db(query, params):
                 conn.rollback()
         print 'Error %s' % e
         sys.exit(1)
-    finally:
-        if conn:
-            conn.close()
 
 # delete duplicate items
 queries = ("delete from legacy where id = 451;"
@@ -728,3 +724,6 @@ for row in rows:
 
 timediff = datetime.now() - timestart
 print 'The script took '+str(timediff)
+
+if conn:
+    conn.close()
