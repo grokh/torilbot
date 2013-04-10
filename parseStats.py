@@ -254,6 +254,9 @@ def parse_identify():
                         params = (id, slot)
                         print cur.mogrify(sql, (params))
                 # build item_specials insert
+                sql = ('INSERT INTO item_specials VALUES (%s, %s)')
+                if item_type == '':
+                    pass
                 # build item_attribs insert
                 # build item_flags insert
                 # build item_restricts insert
