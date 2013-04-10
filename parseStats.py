@@ -246,12 +246,12 @@ def parse_identify():
                 params = (name, keys, wt, val, type, item, today)
                 cur = conn.cursor()
                 print cur.mogrify(sql, (params))
-                id = 0 # cur.execute(sql, params) ? fetchall() ? conn.commit() ?
+                id = 0 # cur.execute(sql, params) ? conn.commit() ? fetchall() ?
                 # build item_slots insert
                 sql = ('INSERT INTO item_slots VALUES (%s, %s)')
                 for slot in slots:
                     if slot != 'NOBITS':
-                        params = (1, slot)
+                        params = (id, slot)
                         print cur.mogrify(sql, (params))
                 # build item_specials insert
                 # build item_attribs insert
