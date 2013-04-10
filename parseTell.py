@@ -133,112 +133,112 @@ elif cmd == 'help':
     if oper == '':
         reply(info)
     elif oper == '?':
-        reply("Syntax: tell katumi ? -- "+
-                "Katumi provides a full listing of valid commands.")
+        reply('Syntax: tell katumi ? -- '
+                'Katumi provides a full listing of valid commands.')
     elif oper == 'hidden?':
-        reply("Syntax: tell katumi hidden? -- "+
-                "Katumi sends a tell in reply "+
-                "if she can see you. If you receive no reply, you are hidden. "+
-                "Katumi has permanent detect invis to ensure that won't cause "+
+        reply("Syntax: tell katumi hidden? -- "
+                "Katumi sends a tell in reply "
+                "if she can see you. If you receive no reply, you are hidden. "
+                "Katumi has permanent detect invis to ensure that won't cause "
                 "issues.")
     elif oper == 'who':
-        reply("Syntax: tell katumi who <acct/char> -- "+
-                "Example: tell katumi who rynshana -- "+
-                "Katumi provides the account name along with a list of every "+
-                "known alt of the named character as a reply. Also works with "+
+        reply("Syntax: tell katumi who <acct/char> -- "
+                "Example: tell katumi who rynshana -- "
+                "Katumi provides the account name along with a list of every "
+                "known alt of the named character as a reply. Also works with "
                 "account names.")
     elif oper == 'char':
-        reply("Syntax: tell katumi char <char> -- "+
-                "Example: tell katumi char rynshana -- "+
-                "Katumi provides the account name along with full information "+
-                "on the named character as a reply, "+
+        reply("Syntax: tell katumi char <char> -- "
+                "Example: tell katumi char rynshana -- "
+                "Katumi provides the account name along with full information "
+                "on the named character as a reply, "
                 "to include level, class, race, and date/time last seen.")
     elif oper == 'find':
-        reply("Syntax: tell katumi find <acct/char> -- "+
-                "Example: tell katumi find rynshana -- "+
-                "Katumi provides the account name along with the last known "+
-                "sighting of any of that character's alts. If they have an alt online, "+
+        reply("Syntax: tell katumi find <acct/char> -- "
+                "Example: tell katumi find rynshana -- "
+                "Katumi provides the account name along with the last known "
+                "sighting of any of that character's alts. If they have an alt online, "
                 "the time will measure in seconds. Also works with account names.")
     elif oper == 'clist':
-        reply("Syntax: tell katumi clist <acct/char> -- "+
-                "Example: tell katumi clist rynshana -- "+
-                "Katumi provides a full "+
-                "listing of every known alt belonging to <char>, including race, "+
-                "class, level, and date/time last seen, matching the format of "+
+        reply("Syntax: tell katumi clist <acct/char> -- "
+                "Example: tell katumi clist rynshana -- "
+                "Katumi provides a full "
+                "listing of every known alt belonging to <char>, including race, "
+                "class, level, and date/time last seen, matching the format of "
                 "the 'char' command. Also works with account names.")
     elif oper == 'class':
-        reply("Syntax: tell katumi class <class> -- "+
-                "Example: tell katumi class enchanter -- "+
-                "Katumi provides a "+
-                "list of alts matching the named class for characters who "+
-                "are currently online, letting group leaders find useful "+
+        reply("Syntax: tell katumi class <class> -- "
+                "Example: tell katumi class enchanter -- "
+                "Katumi provides a "
+                "list of alts matching the named class for characters who "
+                "are currently online, letting group leaders find useful "
                 "alts from the 'who' list.")
     elif oper == 'delalt':
-        reply("Syntax: tell katumi delalt <char> -- "+
-                "Example: tell katumi delalt rynshana -- "+
-                "Katumi no longer "+
-                "provides information on the alt, removing it from 'clist', "+
-                "'who', and 'find' commands. Only works for characters "+
+        reply("Syntax: tell katumi delalt <char> -- "
+                "Example: tell katumi delalt rynshana -- "
+                "Katumi no longer "
+                "provides information on the alt, removing it from 'clist', "
+                "'who', and 'find' commands. Only works for characters "
                 "attached to the same account requesting the removal.")
     elif oper == 'addalt':
-        reply("Syntax: tell katumi addalt <char> -- "+
-                "Example: tell katumi addalt rynshana -- "+
-                "Katumi begins "+
-                "providing information on the named alt, who had previously "+
-                "been removed with 'delalt', adding the character back to "+
-                "'clist', 'who', and 'find' commands. Only works for chars "+
+        reply("Syntax: tell katumi addalt <char> -- "
+                "Example: tell katumi addalt rynshana -- "
+                "Katumi begins "
+                "providing information on the named alt, who had previously "
+                "been removed with 'delalt', adding the character back to "
+                "'clist', 'who', and 'find' commands. Only works for chars "
                 "attached to the same account.")
     elif oper == 'lr':
-        reply("Syntax: tell katumi lr -- "+
-                "Katumi provides a list of load "+
-                "reports for the current boot. This could be rares or quests "+
-                "other players have found or completed. Use the 'lrdel' command "+
+        reply("Syntax: tell katumi lr -- "
+                "Katumi provides a list of load "
+                "reports for the current boot. This could be rares or quests "
+                "other players have found or completed. Use the 'lrdel' command "
                 "to remove bad or out of date reports.")
-        reply("Syntax: tell katumi lr <report> -- "+
-                "Example: tell katumi lr timestop gnome at ako village -- "+
-                "Katumi adds <report> "+
-                "to the list of load reports for the current boot. If you find "+
-                "a rare, global load, or complete a quest or the like, report "+
+        reply("Syntax: tell katumi lr <report> -- "
+                "Example: tell katumi lr timestop gnome at ako village -- "
+                "Katumi adds <report> "
+                "to the list of load reports for the current boot. If you find "
+                "a rare, global load, or complete a quest or the like, report "
                 "it along with a location so other players will know!")
     elif oper == 'lrdel':
-        reply("Syntax: tell katumi lrdel <num> -- "+
-                "Example: tell katumi lrdel 3 -- "+
-                "Katumi removes the "+
-                "numbered item from the load reports, if a quest is completed "+
-                "or a rare killed, or a report found to be inaccurate. Please "+
+        reply("Syntax: tell katumi lrdel <num> -- "
+                "Example: tell katumi lrdel 3 -- "
+                "Katumi removes the "
+                "numbered item from the load reports, if a quest is completed "
+                "or a rare killed, or a report found to be inaccurate. Please "
                 "do not abuse this command - this service helps everyone.")
     elif oper == 'stat':
-        reply("Syntax: tell katumi stat <item> -- "+
-                "Example: tell katumi stat isha cloak -- "+
-                "Katumi provides stat info for the item named. "+
-                "Use 'astat' for full text of acronyms and keywords. "+
-                "The name search is fairly forgiving. Please send new stats "+
+        reply("Syntax: tell katumi stat <item> -- "
+                "Example: tell katumi stat isha cloak -- "
+                "Katumi provides stat info for the item named. "
+                "Use 'astat' for full text of acronyms and keywords. "
+                "The name search is fairly forgiving. Please send new stats "
                 "in an mwrite to katumi or email to kristi.michaels@gmail.com")
     elif oper == 'astat':
-        reply("Syntax: tell katumi astat <item> -- "+
-                "Example tell katumi astat destruction sword -- "+
-                "Katumi provides full "+
-                "stat information for the item named. Use 'stat' for short "+
-                "text. The name search is fairly forgiving, though the stats "+
-                "are a little buggy right now since I haven't put much time "+
+        reply("Syntax: tell katumi astat <item> -- "
+                "Example tell katumi astat destruction sword -- "
+                "Katumi provides full "
+                "stat information for the item named. Use 'stat' for short "
+                "text. The name search is fairly forgiving, though the stats "
+                "are a little buggy right now since I haven't put much time "
                 "into it.")
     elif oper == 'fstat':
-        reply("Syntax: tell katumi fstat <stat> <sym> <num>"+
-        "[, <stat2> <sym2> <num2>][, resist <resist>] -- "+
-        "Example: tell katumi fstat maxagi > 0, resist fire -- "+
+        reply("Syntax: tell katumi fstat <stat> <sym> <num>"
+        "[, <stat2> <sym2> <num2>][, resist <resist>] -- "
+        "Example: tell katumi fstat maxagi > 0, resist fire -- "
         "Katumi provides up to 10 results which match the parameters.")
-        reply("Type attribs as they appear in stats: str, maxstr, svsp,"+
-        " sf_illu, fire, unarm, etc. Valid comparisons are >, <, and =."+
+        reply("Type attribs as they appear in stats: str, maxstr, svsp,"
+        " sf_illu, fire, unarm, etc. Valid comparisons are >, <, and =."
         " Resists check for a positive value. Other options will be added later."
         )
 elif (cmd == 'hidden' or cmd == 'hidden?' or cmd == 'hidden/') and oper == '':
     if char != 'Someone':
         reply(char+' is NOT hidden')
-elif cmd == 'stat':
+elif cmd == 'stat' and oper != '':
     reply(find_item('short_stats'))
-elif cmd == 'astat':
+elif cmd == 'astat' and oper != '':
     reply(find_item('long_stats'))
-elif cmd == 'fstat':
+elif cmd == 'fstat' and oper != '':
     opers = oper.split(',')
     query = "SELECT short_stats FROM items"
     params = ()
@@ -278,7 +278,7 @@ elif cmd == 'fstat':
             reply(notfound('item(s)'))
     else:
         reply(syntax)
-elif cmd == 'who':
+elif cmd == 'who' and oper != '':
     query = "SELECT account_name, char_name FROM chars WHERE vis = true AND account_name \
     = (SELECT account_name FROM chars WHERE LOWER(char_name) = LOWER(%s))"
     params = (oper,)
@@ -295,7 +295,7 @@ elif cmd == 'who':
             whocmd(rows)
         else:
             reply(notfound('character'))
-elif cmd == 'clist':
+elif cmd == 'clist' and oper != '':
     query ="SELECT char_level, class_name, char_name, char_race, account_name, \
     last_seen FROM chars WHERE vis = true AND account_name = \
     (SELECT account_name FROM chars \
@@ -315,7 +315,7 @@ elif cmd == 'clist':
             clistcmd(rows)
         else:
             reply(notfound('character'))
-elif cmd == 'char':
+elif cmd == 'char' and oper.isalpha():
     query ="SELECT char_level, class_name, char_name, char_race, account_name, \
     last_seen FROM chars WHERE vis = true AND LOWER(char_name) = LOWER(%s)"
     params = (oper,)
@@ -325,7 +325,7 @@ elif cmd == 'char':
         +' ('+rows[0][3]+') (@'+rows[0][4]+') seen '+str(rows[0][5]))
     else:
         reply(notfound('character'))
-elif cmd == 'find':
+elif cmd == 'find' and oper != '':
     query = "SELECT account_name, char_name, last_seen FROM chars \
     WHERE vis = true AND account_name = \
     (SELECT account_name FROM chars \
@@ -346,7 +346,7 @@ elif cmd == 'find':
             findcmd(rows)
         else:
             reply(notfound('character'))
-elif cmd == 'class':
+elif cmd == 'class' and oper.isalpha():
     query="SELECT char_name, class_name, char_race, char_level, account_name FROM chars \
     WHERE LOWER(class_name) = LOWER(%s) AND vis = true AND account_name IN \
     (SELECT account_name FROM chars \
@@ -360,7 +360,7 @@ elif cmd == 'class':
             +row[0]+' ('+row[2]+') (@'+row[4]+')')
     else:
         reply(notfound('class'))
-elif cmd == 'delalt':
+elif cmd == 'delalt' and oper.isalpha():
     query = "SELECT account_name, char_name FROM chars WHERE LOWER(char_name) = LOWER(%s) \
     AND account_name = (SELECT account_name FROM chars WHERE char_name = %s)"
     params = (oper,char)
@@ -373,7 +373,7 @@ elif cmd == 'delalt':
             reply('Removed character from your alt list: '+oper)
     else:
         reply(notfound('character or account'))
-elif cmd == 'addalt':
+elif cmd == 'addalt' and oper.isalpha():
     query = "SELECT account_name, char_name FROM chars WHERE LOWER(char_name) = LOWER(%s) \
     AND account_name = (SELECT account_name FROM chars WHERE char_name = %s)"
     params = (oper,char)
@@ -409,7 +409,7 @@ elif cmd == 'lr':
         params = (curboot, oper, char)
         db(query, params)
         reply('Load reported: '+oper)
-elif cmd == 'lrdel':
+elif cmd == 'lrdel' and oper.isdigit():
     if oper.isdigit():
         query = "SELECT boot_id, report_time FROM loads WHERE deleted IS FALSE\
         AND boot_id = (SELECT MAX(boot_id) FROM boots)"
