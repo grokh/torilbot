@@ -119,13 +119,13 @@ if len(tell) > 1: # If there's actually an operant
     oper = tell[1]
 
 site = 'http://www.example.com/' # Website for stuff
-info = 'I am a Helper Bot (Beta). Valid commands: ?, help <cmd>, hidden?, \
-who <char>, char <char>, clist <char>, find <char>, class <class>, \
-delalt <char>, addalt <char>, lr, lr <report>, stat <item>, astat <item>, \
-fstat <att> <comp> <val>. \
-For further information, tell katumi help <cmd>'
-syntax = 'Invalid syntax. For valid syntax: tell katumi ?, \
-tell katumi help <cmd>'
+info = ('I am a Helper Bot (Beta). Valid commands: ?, help <cmd>, hidden?, '
+        'who <char>, char <char>, clist <char>, find <char>, class <class>, '
+        'delalt <char>, addalt <char>, lr, lr <report>, stat <item>, astat '
+        '<item>, fstat <att> <comp> <val>. '
+        'For further information, tell katumi help <cmd>')
+syntax = ('Invalid syntax. For valid syntax: tell katumi ?, '
+        'tell katumi help <cmd>')
 
 if cmd == '?':
     reply(info)
@@ -224,13 +224,13 @@ elif cmd == 'help':
                 "into it.")
     elif oper == 'fstat':
         reply("Syntax: tell katumi fstat <stat> <sym> <num>"
-        "[, <stat2> <sym2> <num2>][, resist <resist>] -- "
-        "Example: tell katumi fstat maxagi > 0, resist fire -- "
-        "Katumi provides up to 10 results which match the parameters.")
+                "[, <stat2> <sym2> <num2>][, resist <resist>] -- "
+                "Example: tell katumi fstat maxagi > 0, resist fire -- "
+                "Katumi provides up to 10 results which match the parameters.")
         reply("Type attribs as they appear in stats: str, maxstr, svsp,"
-        " sf_illu, fire, unarm, etc. Valid comparisons are >, <, and =."
-        " Resists check for a positive value. Other options will be added later."
-        )
+                " sf_illu, fire, unarm, etc. Valid comparisons are >, <, and =."
+                " Resists check for a positive value. "
+                "Other options will be added later.")
 elif (cmd == 'hidden' or cmd == 'hidden?' or cmd == 'hidden/') and oper == '':
     if char != 'Someone':
         reply(char+' is NOT hidden')
@@ -253,9 +253,9 @@ elif cmd == 'fstat' and oper != '':
                     query += " WHERE item_id IN"
                 else:
                     query += " AND item_id IN"
-                query += " (SELECT i.item_id FROM items i, item_attribs a \
-                WHERE i.item_id = a.item_id \
-                AND attrib_abbr = %s AND attrib_value "+comp+" %s)"
+                query += (" (SELECT i.item_id FROM items i, item_attribs a "
+                        "WHERE i.item_id = a.item_id "
+                        "AND attrib_abbr = %s AND attrib_value "+comp+" %s)")
                 params += (att, val)
         elif len(fop) == 2:
             if fop[0].lower() == 'resist':
@@ -264,9 +264,9 @@ elif cmd == 'fstat' and oper != '':
                     query += " WHERE item_id IN"
                 else:
                     query += " AND item_id IN"
-                query += " (SELECT i.item_id FROM items i, item_resists r \
-                WHERE i.item_id = r.item_id \
-                AND resist_abbr = %s AND resist_value > 0)"
+                query += (" (SELECT i.item_id FROM items i, item_resists r "
+                        "WHERE i.item_id = r.item_id "
+                        "AND resist_abbr = %s AND resist_value > 0)")
                 params += (res,)
     query += " LIMIT 10;"
     if 'WHERE' in query:
@@ -279,16 +279,19 @@ elif cmd == 'fstat' and oper != '':
     else:
         reply(syntax)
 elif cmd == 'who' and oper != '':
-    query = "SELECT account_name, char_name FROM chars WHERE vis = true AND account_name \
-    = (SELECT account_name FROM chars WHERE LOWER(char_name) = LOWER(%s))"
+    query = ("SELECT account_name, char_name "
+            "FROM chars WHERE vis = true "
+            "AND account_name = "
+            "(SELECT account_name FROM chars "
+            "WHERE LOWER(char_name) = LOWER(%s))")
     params = (oper,)
     rows = db(query, params)
     if len(rows) > 0:
         whocmd(rows)
     else:
         acct = oper.strip('@')
-        query = "SELECT account_name, char_name FROM chars WHERE vis = true \
-        AND LOWER(account_name) = LOWER(%s)"
+        query = ("SELECT account_name, char_name FROM chars WHERE vis = true "
+                "AND LOWER(account_name) = LOWER(%s)")
         params = (acct,)
         rows = db(query, params)
         if len(rows) > 0:
@@ -296,19 +299,21 @@ elif cmd == 'who' and oper != '':
         else:
             reply(notfound('character'))
 elif cmd == 'clist' and oper != '':
-    query ="SELECT char_level, class_name, char_name, char_race, account_name, \
-    last_seen FROM chars WHERE vis = true AND account_name = \
-    (SELECT account_name FROM chars \
-    WHERE LOWER(char_name) = LOWER(%s) AND vis = true)"
+    query = ("SELECT char_level, class_name, char_name, char_race, "
+            "account_name, last_seen "
+            "FROM chars WHERE vis = true "
+            "AND account_name = "
+            "(SELECT account_name FROM chars "
+            "WHERE LOWER(char_name) = LOWER(%s) AND vis = true)")
     params = (oper,)
     rows = db(query, params)
     if len(rows) > 0:
         clistcmd(rows)
     else:
         acct = oper.strip('@')
-        query = "SELECT char_level, class_name, char_name, char_race, \
-        account_name, last_seen FROM chars WHERE vis = true \
-        AND LOWER(account_name) = LOWER(%s)"
+        query = ("SELECT char_level, class_name, char_name, char_race, "
+                "account_name, last_seen FROM chars WHERE vis = true "
+                "AND LOWER(account_name) = LOWER(%s)")
         params = (acct,)
         rows = db(query, params)
         if len(rows) > 0:
@@ -316,8 +321,9 @@ elif cmd == 'clist' and oper != '':
         else:
             reply(notfound('character'))
 elif cmd == 'char' and oper.isalpha():
-    query ="SELECT char_level, class_name, char_name, char_race, account_name, \
-    last_seen FROM chars WHERE vis = true AND LOWER(char_name) = LOWER(%s)"
+    query = ("SELECT char_level, class_name, char_name, char_race, "
+            "account_name, last_seen FROM chars WHERE vis = true "
+            "AND LOWER(char_name) = LOWER(%s)")
     params = (oper,)
     rows = db(query, params)
     if len(rows) > 0:
@@ -326,20 +332,20 @@ elif cmd == 'char' and oper.isalpha():
     else:
         reply(notfound('character'))
 elif cmd == 'find' and oper != '':
-    query = "SELECT account_name, char_name, last_seen FROM chars \
-    WHERE vis = true AND account_name = \
-    (SELECT account_name FROM chars \
-    WHERE LOWER(char_name) = LOWER(%s) AND vis = true) \
-    ORDER BY last_seen DESC LIMIT 1"
+    query = ("SELECT account_name, char_name, last_seen FROM chars "
+            "WHERE vis = true AND account_name = "
+            "(SELECT account_name FROM chars "
+            "WHERE LOWER(char_name) = LOWER(%s) AND vis = true) "
+            "ORDER BY last_seen DESC LIMIT 1")
     params = (oper,)
     rows = db(query, params)
     if len(rows) > 0:
         findcmd(rows)
     else:
         acct = oper.strip('@')
-        query = "SELECT account_name, char_name, last_seen FROM chars \
-        WHERE vis = true AND LOWER(account_name) = LOWER(%s) \
-        ORDER BY last_seen DESC LIMIT 1"
+        query = ("SELECT account_name, char_name, last_seen FROM chars "
+                "WHERE vis = true AND LOWER(account_name) = LOWER(%s) "
+                "ORDER BY last_seen DESC LIMIT 1")
         params = (acct,)
         rows = db(query, params)
         if len(rows) > 0:
@@ -347,11 +353,13 @@ elif cmd == 'find' and oper != '':
         else:
             reply(notfound('character'))
 elif cmd == 'class' and oper.isalpha():
-    query="SELECT char_name, class_name, char_race, char_level, account_name FROM chars \
-    WHERE LOWER(class_name) = LOWER(%s) AND vis = true AND account_name IN \
-    (SELECT account_name FROM chars \
-    WHERE last_seen > (CURRENT_TIMESTAMP - INTERVAL '1 minute') AND vis = true) \
-    ORDER BY char_level DESC"
+    query= ("SELECT char_name, class_name, char_race, char_level, account_name "
+            "FROM chars WHERE LOWER(class_name) = LOWER(%s) AND vis = true "
+            "AND account_name IN "
+            "(SELECT account_name FROM chars "
+            "WHERE last_seen > (CURRENT_TIMESTAMP - INTERVAL '1 minute') "
+            "AND vis = true) "
+            "ORDER BY char_level DESC")
     params = (oper,)
     rows = db(query, params)
     if len(rows) > 0:
@@ -361,26 +369,32 @@ elif cmd == 'class' and oper.isalpha():
     else:
         reply(notfound('class'))
 elif cmd == 'delalt' and oper.isalpha():
-    query = "SELECT account_name, char_name FROM chars WHERE LOWER(char_name) = LOWER(%s) \
-    AND account_name = (SELECT account_name FROM chars WHERE char_name = %s)"
+    query = ("SELECT account_name, char_name FROM chars "
+            "WHERE LOWER(char_name) = LOWER(%s) "
+            "AND account_name = "
+            "(SELECT account_name FROM chars WHERE char_name = %s)")
     params = (oper,char)
     rows = db(query, params)
     if len(rows) > 0:
         for row in rows:
-            query = "UPDATE chars SET vis = false WHERE LOWER(char_name) = LOWER(%s)"
+            query = ("UPDATE chars SET vis = false "
+                    "WHERE LOWER(char_name) = LOWER(%s)")
             params = (oper,)
             db(query, params)
             reply('Removed character from your alt list: '+oper)
     else:
         reply(notfound('character or account'))
 elif cmd == 'addalt' and oper.isalpha():
-    query = "SELECT account_name, char_name FROM chars WHERE LOWER(char_name) = LOWER(%s) \
-    AND account_name = (SELECT account_name FROM chars WHERE char_name = %s)"
+    query = ("SELECT account_name, char_name FROM chars "
+            "WHERE LOWER(char_name) = LOWER(%s) "
+            "AND account_name = "
+            "(SELECT account_name FROM chars WHERE char_name = %s)")
     params = (oper,char)
     rows = db(query, params)
     if len(rows) > 0:
         for row in rows:
-            query = "UPDATE chars SET vis = true WHERE LOWER(char_name) = LOWER(%s)"
+            query = ("UPDATE chars SET vis = true "
+                    "WHERE LOWER(char_name) = LOWER(%s)")
             params = (oper,)
             db(query, params)
             reply('Re-added character to your alt list: '+oper)
@@ -393,8 +407,9 @@ elif cmd == 'lr':
     rows = db(query, params)
     curboot = rows[0][0]
     if oper == '': # give user load reports for current boot
-        query = "SELECT char_name, report_text, date_trunc('seconds', report_time) \
-        FROM loads WHERE boot_id = %s AND deleted IS FALSE"
+        query = ("SELECT char_name, report_text, "
+                "date_trunc('seconds', report_time) "
+                "FROM loads WHERE boot_id = %s AND deleted IS FALSE")
         params = (curboot,)
         rows = db(query, params)
         if len(rows) > 0:
@@ -405,21 +420,23 @@ elif cmd == 'lr':
         else:
             reply('No loads reported for current boot.')
     else: # add load report for current boot
-        query = "INSERT INTO loads VALUES(%s, CURRENT_TIMESTAMP, %s, %s, false)"
+        query = ("INSERT INTO loads "
+                "VALUES(%s, CURRENT_TIMESTAMP, %s, %s, false)")
         params = (curboot, oper, char)
         db(query, params)
         reply('Load reported: '+oper)
 elif cmd == 'lrdel' and oper.isdigit():
     if oper.isdigit():
-        query = "SELECT boot_id, report_time FROM loads WHERE deleted IS FALSE\
-        AND boot_id = (SELECT MAX(boot_id) FROM boots)"
+        query = ("SELECT boot_id, report_time FROM loads "
+                "WHERE deleted IS FALSE "
+                "AND boot_id = (SELECT MAX(boot_id) FROM boots)")
         params = ''
         rows = db(query, params)
         if len(rows) > 0:
             curboot = rows[0][0]
             rtime = rows[int(oper)-1][1]
-            query = "UPDATE loads SET deleted = true WHERE boot_id = %s\
-            AND report_time = %s"
+            query = ("UPDATE loads SET deleted = true WHERE boot_id = %s "
+                    "AND report_time = %s")
             params = (curboot, rtime)
             db(query, params)
             reply('Load report '+oper+' deleted')
