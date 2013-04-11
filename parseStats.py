@@ -273,11 +273,11 @@ def short_stats():
     params = ''
     ids = db(query, params)
     for id in ids:
-        query = "SELECT item_name, \
-        INITCAP(item_type), weight, c_value, \
-        from_zone, last_id, is_rare, from_store, from_quest, for_quest, \
-        from_invasion, out_of_game, no_identify \
-        FROM items WHERE item_id = %s"
+        query = ("SELECT item_name, "
+                "INITCAP(item_type), weight, c_value, "
+                "from_zone, last_id, is_rare, from_store, from_quest, "
+                "for_quest, from_invasion, out_of_game, no_identify "
+                "FROM items WHERE item_id = %s")
         params = (id[0],)
         item = db(query, params)
         i = item[0][0]
@@ -286,28 +286,28 @@ def short_stats():
         if len(slots) > 0: # if item has worn slots
             for slot in slots:
                 i += ' ('+slot[0]+')'
-        query = "SELECT UPPER(spec_abbr), spec_value FROM item_specials \
-        WHERE item_id = %s AND item_type = 'armor'"
+        query = ("SELECT UPPER(spec_abbr), spec_value FROM item_specials "
+                "WHERE item_id = %s AND item_type = 'armor'")
         specs = db(query, params)
         if len(specs) > 0: # if item has AC because it's type Armor
             for spec in specs:
                 i += ' '+spec[0]+':'+str(spec[1])
         # put in attribs
-        query = "SELECT INITCAP(attrib_abbr), attrib_value \
-                FROM item_attribs WHERE item_id = %s"
+        query = ("SELECT INITCAP(attrib_abbr), attrib_value "
+                "FROM item_attribs WHERE item_id = %s")
         attrs = db(query, params)
         if len(attrs) > 0:
             for att in attrs:
                 i += ' '+att[0]+':'+str(att[1])
-        query = "SELECT INITCAP(resist_abbr), resist_value \
-        FROM item_resists WHERE item_id = %s"
+        query = ("SELECT INITCAP(resist_abbr), resist_value "
+                "FROM item_resists WHERE item_id = %s")
         resi = db(query, params)
         if len(resi) > 0: # if item has resistances
             for res in resi:
                 i += ' '+res[0]+':'+str(res[1])+'%'
-        query = "SELECT item_type, INITCAP(spec_abbr), INITCAP(spec_value) \
-        FROM item_specials \
-        WHERE item_id = %s AND item_type != 'armor'"
+        query = ("SELECT item_type, INITCAP(spec_abbr), INITCAP(spec_value) "
+                "FROM item_specials "
+                "WHERE item_id = %s AND item_type != 'armor'")
         specs = db(query, params)
         if len(specs) > 0: # if item has specials, like weapon or instrument
             special = ' * ('+item[0][1]+')'
@@ -378,7 +378,8 @@ def short_stats():
                         type = ' '+spec[1]+':'+spec[2]+')'
                 special += dice+crit+multi+clas+type
             i += special
-        query = "SELECT INITCAP(effect_abbr) FROM item_effects WHERE item_id = %s"
+        query = ("SELECT INITCAP(effect_abbr) "
+                "FROM item_effects WHERE item_id = %s")
         effects = db(query, params)
         if len(effects) > 0: # if item has effects like infra
             i += ' *'
@@ -394,8 +395,9 @@ def short_stats():
                 else:
                     process += ' - '+proc[0]
             i += process
-        query = "SELECT INITCAP(ench_name), dam_pct, freq_pct, sv_mod, duration \
-        FROM item_enchants WHERE item_id = %s"
+        query = ("SELECT INITCAP(ench_name), "
+                "dam_pct, freq_pct, sv_mod, duration "
+                "FROM item_enchants WHERE item_id = %s")
         enchs = db(query, params)
         if len(enchs) > 0: # if item has weapon enchantment
             enchant = ' *'
@@ -413,7 +415,8 @@ def short_stats():
             i += ' *'
             for flag in flags:
                 i += ' '+flag[0]
-        query = "SELECT INITCAP(restrict_abbr) FROM item_restricts WHERE item_id = %s"
+        query = ("SELECT INITCAP(restrict_abbr) "
+                "FROM item_restricts WHERE item_id = %s")
         restr = db(query, params)
         if len(restr) > 0: # if item has restrictions
             i += ' *'
@@ -456,52 +459,52 @@ def long_stats():
     params = ''
     ids = db(query, params)
     for id in ids:
-        query = "SELECT item_name, \
-        item_type, weight, c_value, zone_name, last_id, \
-        is_rare, from_store, from_quest, for_quest, from_invasion, \
-        out_of_game, no_identify, keywords \
-        FROM items i, zones z \
-        WHERE i.from_zone = z.zone_abbr AND item_id = %s"
+        query = ("SELECT item_name, "
+                "item_type, weight, c_value, zone_name, last_id, "
+                "is_rare, from_store, from_quest, for_quest, from_invasion, "
+                "out_of_game, no_identify, keywords "
+                "FROM items i, zones z "
+                "WHERE i.from_zone = z.zone_abbr AND item_id = %s")
         params = (id[0],)
         item = db(query, params)
         i = item[0][0]
-        query = "SELECT i.slot_abbr, slot_display \
-        FROM item_slots i, slots s \
-        WHERE i.slot_abbr = s.slot_abbr AND item_id = %s"
+        query = ("SELECT i.slot_abbr, slot_display "
+                "FROM item_slots i, slots s "
+                "WHERE i.slot_abbr = s.slot_abbr AND item_id = %s")
         slots = db(query, params)
         if len(slots) > 0:
             i += ' *'
             for slot in slots:
                 i += ', '+slot[1]
             i += ' *'
-        query = "SELECT i.spec_abbr, spec_value, spec_display \
-        FROM item_specials i, specials s \
-        WHERE i.spec_abbr = s.spec_abbr AND item_id = %s \
-        AND i.spec_abbr = 'ac'"
+        query = ("SELECT i.spec_abbr, spec_value, spec_display "
+                "FROM item_specials i, specials s "
+                "WHERE i.spec_abbr = s.spec_abbr AND item_id = %s "
+                "AND i.spec_abbr = 'ac'")
         specs = db(query, params)
         if len(specs) > 0:
             i += ', '+specs[0][2]+': '+str(specs[0][1])
-        query = "SELECT i.attrib_abbr, attrib_value, attrib_display \
-        FROM item_attribs i, attribs a \
-        WHERE i.attrib_abbr = a.attrib_abbr AND item_id = %s"
+        query = ("SELECT i.attrib_abbr, attrib_value, attrib_display "
+                "FROM item_attribs i, attribs a "
+                "WHERE i.attrib_abbr = a.attrib_abbr AND item_id = %s")
         attrs = db(query, params)
         if len(attrs) > 0:
             i += ' *'
             for att in attrs:
                 i += ', '+att[2]+': '+str(att[1])
-        query = "SELECT i.resist_abbr, resist_value, resist_display \
-        FROM item_resists i, resists r \
-        WHERE i.resist_abbr = r.resist_abbr AND item_id = %s"
+        query = ("SELECT i.resist_abbr, resist_value, resist_display "
+                "FROM item_resists i, resists r "
+                "WHERE i.resist_abbr = r.resist_abbr AND item_id = %s")
         resis = db(query, params)
         if len(resis) > 0:
             i += ' *'
             for res in resis:
                 i += ', '+res[2]+': '+str(res[1])+'%'
-        query = "SELECT i.spec_abbr, spec_value, spec_display \
-        FROM item_specials i, specials s \
-        WHERE i.spec_abbr = s.spec_abbr AND item_id = %s \
-        AND i.spec_abbr != 'ac' \
-        GROUP BY i.spec_abbr, spec_value, spec_display"
+        query = ("SELECT i.spec_abbr, spec_value, spec_display "
+                "FROM item_specials i, specials s "
+                "WHERE i.spec_abbr = s.spec_abbr AND item_id = %s "
+                "AND i.spec_abbr != 'ac' "
+                "GROUP BY i.spec_abbr, spec_value, spec_display")
         specs = db(query, params)
         # should really switch this out into lots of if/else for proper
         # formatting, right now it's bugged
@@ -523,9 +526,9 @@ def long_stats():
                 pass
             elif item[0][1] == 'weapon':
                 pass
-        query = "SELECT i.effect_abbr, effect_display \
-        FROM item_effects i, effects e \
-        WHERE i.effect_abbr = e.effect_abbr AND item_id = %s"
+        query = ("SELECT i.effect_abbr, effect_display "
+                "FROM item_effects i, effects e "
+                "WHERE i.effect_abbr = e.effect_abbr AND item_id = %s")
         effs = db(query, params)
         if len(effs) > 0:
             i += ' *'
@@ -537,23 +540,23 @@ def long_stats():
             i += ' *'
             for proc in procs:
                 i += ', '+proc[0]
-        query = "SELECT ench_name, dam_pct, freq_pct, sv_mod, duration \
-        FROM item_enchants WHERE item_id = %s"
+        query = ("SELECT ench_name, dam_pct, freq_pct, sv_mod, duration "
+                "FROM item_enchants WHERE item_id = %s")
         enchs = db(query, params)
         if len(enchs) > 0:
             i += ' *'
             pass
-        query = "SELECT i.flag_abbr, flag_display \
-        FROM item_flags i, flags f \
-        WHERE i.flag_abbr = f.flag_abbr AND item_id = %s"
+        query = ("SELECT i.flag_abbr, flag_display "
+                "FROM item_flags i, flags f "
+                "WHERE i.flag_abbr = f.flag_abbr AND item_id = %s")
         flags = db(query, params)
         if len(flags) > 0:
             i += ' *'
             for flag in flags:
                 i += ', '+flag[1]
-        query = "SELECT i.restrict_abbr, restrict_name \
-        FROM item_restricts i, restricts r \
-        WHERE i.restrict_abbr = r.restrict_abbr AND item_id = %s"
+        query = ("SELECT i.restrict_abbr, restrict_name "
+                "FROM item_restricts i, restricts r "
+                "WHERE i.restrict_abbr = r.restrict_abbr AND item_id = %s")
         rests = db(query, params)
         if len(rests) > 0:
             i += ' *'
@@ -610,4 +613,5 @@ if options.long:
 timediff = datetime.now() - timestart
 print 'The script took '+str(timediff)
 
-conn.close()
+if conn:
+    conn.close()

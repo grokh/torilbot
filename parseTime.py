@@ -33,8 +33,8 @@ curtime = timedelta(hours=int(curboot[0]), minutes=int(curboot[1]),
 seconds=int(curboot[2]))
 
 # query DB for details of most recent boot
-query = "SELECT boot_id, uptime FROM boots WHERE boot_time = \
-(SELECT MAX(boot_time) FROM boots)"
+query = ("SELECT boot_id, uptime FROM boots WHERE boot_time = "
+        "(SELECT MAX(boot_time) FROM boots)")
 params = ''
 rows = db(query, params)
 oldid = rows[0][0]
@@ -45,8 +45,8 @@ seconds=int(oldboot[2]))
 
 # check if current boot time is less than last boot time
 if curtime < oldtime: # if it is, create new boot_id
-    query = "INSERT INTO boots (boot_time, uptime) VALUES(\
-    CURRENT_TIMESTAMP - interval %s, %s)"
+    query = ("INSERT INTO boots (boot_time, uptime) "
+            "VALUES(CURRENT_TIMESTAMP - interval %s, %s)")
     params = (curup, curup)
     db(query, params)
     # send email to people who want to know about new boots
@@ -56,4 +56,5 @@ else: # if not, update uptime
     params = (curup, oldid)
     db(query, params)
 
-conn.close()
+if conn:
+    conn.close()

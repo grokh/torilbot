@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
 """
-Python source code - This is a program thingy to do things and stuff
+Python source code - Parses input from 'who' command to track characters,
+accounts, and last time spotted
 """
 
 import sys
 import psycopg2
-import string
 import datetime
 
 conn = psycopg2.connect(database='torildb', user='kalkinine')
@@ -38,16 +38,16 @@ date = now.strftime("%Y-%m-%d %H:%M:%S")
 # check if it's a global 'who' or a direct 'who <char>'
 if acct == '': # it's a global 'who'
 	# check if character exists in DB
-	query = "SELECT account_name, char_name FROM chars\
-	WHERE LOWER(char_name) = LOWER(%s)"
+	query = ("SELECT account_name, char_name FROM chars "
+            "WHERE LOWER(char_name) = LOWER(%s)")
 	params = (char,)
 	rows = db(query, params)
 	if len(rows) == 0: # if not, 'who <char>'
 		print 'who '+char
 	else: # update level and last_seen
 		acct = rows[0][0]
-		query = "UPDATE chars SET char_level=%s, last_seen=%s WHERE \
-		account_name = %s AND char_name = %s"
+		query = ("UPDATE chars SET char_level = %s, last_seen = %s "
+                "WHERE account_name = %s AND char_name = %s")
 		params = (level, date, acct, char)
 		db(query, params)
 else: # it's a direct 'who <char>'
@@ -56,8 +56,8 @@ else: # it's a direct 'who <char>'
 	params = (char,)
 	rows = db(query, params)
 	if len(rows) == 0: # if no char, check if account exists in DB, create char
-		query = "SELECT account_name FROM accounts WHERE \
-		LOWER(account_name) = LOWER(%s)"
+		query = ("SELECT account_name FROM accounts "
+                "WHERE LOWER(account_name) = LOWER(%s)")
 		params = (acct,)
 		rows = db(query, params)
 		if len(rows) == 0: # if no acct, create acccount
@@ -69,4 +69,5 @@ else: # it's a direct 'who <char>'
 		params = (acct, char, clas, race, level, date)
 		db(query, params)
 
-conn.close()
+if conn:
+    conn.close()

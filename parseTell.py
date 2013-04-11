@@ -445,4 +445,5 @@ elif cmd == 'lrdel' and oper.isdigit():
 else:
     reply(syntax)
 
-conn.close()
+if conn:
+    conn.close()
