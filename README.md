@@ -4,7 +4,6 @@ torilbot
 TorilMUD Bot for item stats, account and character tracking, boot tracking, and load reporting.
 
 Originally written for:
-* VirtualBox 4.2
 * CentOS 6
 * Tintin++ 2.01.0
 * Python 2.6
