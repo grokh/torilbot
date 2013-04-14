@@ -231,6 +231,8 @@ elif cmd == 'help':
                 " sf_illu, fire, unarm, etc. Valid comparisons are >, <, and =."
                 " Resists check for a positive value. "
                 "Other options will be added later.")
+    else:
+        reply(notfound("help file"))
 elif (cmd == 'hidden' or cmd == 'hidden?' or cmd == 'hidden/') and oper == '':
     if char != 'Someone':
         reply(char+' is NOT hidden')
@@ -426,22 +428,21 @@ elif cmd == 'lr':
         db(query, params)
         reply('Load reported: '+oper)
 elif cmd == 'lrdel' and oper.isdigit():
-    if oper.isdigit():
-        query = ("SELECT boot_id, report_time FROM loads "
-                "WHERE deleted IS FALSE "
-                "AND boot_id = (SELECT MAX(boot_id) FROM boots)")
-        params = ''
-        rows = db(query, params)
-        if len(rows) > 0:
-            curboot = rows[0][0]
-            rtime = rows[int(oper)-1][1]
-            query = ("UPDATE loads SET deleted = true WHERE boot_id = %s "
-                    "AND report_time = %s")
-            params = (curboot, rtime)
-            db(query, params)
-            reply('Load report '+oper+' deleted')
-        else:
-            reply('No loads reported for current boot.')
+    query = ("SELECT boot_id, report_time FROM loads "
+            "WHERE deleted IS FALSE "
+            "AND boot_id = (SELECT MAX(boot_id) FROM boots)")
+    params = ''
+    rows = db(query, params)
+    if len(rows) > 0:
+        curboot = rows[0][0]
+        rtime = rows[int(oper)-1][1]
+        query = ("UPDATE loads SET deleted = true WHERE boot_id = %s "
+                "AND report_time = %s")
+        params = (curboot, rtime)
+        db(query, params)
+        reply('Load report '+oper+' deleted')
+    else:
+        reply('No loads reported for current boot.')
 else:
     reply(syntax)
 
