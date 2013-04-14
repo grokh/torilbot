@@ -1,30 +1,32 @@
 #nop TorilMUD, Helper Bot, Last Changed 2013-04-05 by Rynshana
 
 
-#CONFIG           {SPEEDWALK}             {ON}
-#CONFIG           {VERBATIM}              {OFF}
-#CONFIG           {REPEAT ENTER}          {ON}
-#CONFIG           {COMMAND ECHO}          {ON}
-#CONFIG           {VERBOSE}               {OFF}
-#CONFIG           {WORDWRAP}              {OFF}
-#CONFIG           {LOG}                   {RAW}
-#CONFIG           {BUFFER SIZE}           {65000}
-#CONFIG           {SCROLL LOCK}           {ON}
-#CONFIG           {HISTORY SIZE}          {2500}
-#CONFIG           {CONNECT RETRY}         {360}
+#CONFIG         {AUTO TAB}              {5000}
+#CONFIG         {BUFFER SIZE}           {65000}
+#CONFIG         {CHARSET}               {ASCII}
+#CONFIG         {CONNECT RETRY}         {360}
+#CONFIG         {COMMAND COLOR}         {<078>}
+#CONFIG         {COMMAND ECHO}          {ON}
+#CONFIG         {HISTORY SIZE}          {2500}
+#CONFIG         {LOG}                   {RAW}
 #nop Without packet patch, some text disappears. With a high value, the prompt gets overwritten
-#CONFIG           {PACKET PATCH}          {0.05}
-#CONFIG           {REGEXP}                {OFF}
-#CONFIG           {TINTIN CHAR}           {#}
-#CONFIG           {VERBATIM CHAR}         {\}
-#CONFIG           {REPEAT CHAR}           {!}
-#PATHDIR          {n}                     {s}                          {1}
-#PATHDIR          {e}                     {w}                          {2}
-#PATHDIR          {s}                     {n}                          {4}
-#PATHDIR          {w}                     {e}                          {8}
-#PATHDIR          {u}                     {d}                          {16}
-#PATHDIR          {d}                     {u}                          {32}
-
+#CONFIG         {PACKET PATCH}          {0.05}
+#CONFIG         {REPEAT ENTER}          {ON}
+#CONFIG         {REPEAT CHAR}           {!}
+#CONFIG         {SCROLL LOCK}           {ON}
+#CONFIG         {SPEEDWALK}             {ON}
+#CONFIG         {TINTIN CHAR}           {#}
+#CONFIG         {VERBATIM}              {OFF}
+#CONFIG         {VERBATIM CHAR}         {\}
+#CONFIG         {VERBOSE}               {OFF}
+#CONFIG         {WORDWRAP}              {OFF}
+#CONFIG         {256 COLORS}            {ON}
+#PATHDIR        {n}                     {s}             {1}
+#PATHDIR        {e}                     {w}             {2}
+#PATHDIR        {s}                     {n}             {4}
+#PATHDIR        {w}                     {e}             {8}
+#PATHDIR        {u}                     {d}             {16}
+#PATHDIR        {d}                     {u}             {32}
 
 #nop tokens.tin sets the following variables to correct info
 #var {acct} {Account}
